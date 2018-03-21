@@ -6,8 +6,8 @@ class PGP
 {
 public:
     PGP();
-    virtual ~PGP();
-
+   ~PGP();
+   // virtual ~PGP();
     // ImportKey
     // SearchKeys
     // EncryptMessage

@@ -5,7 +5,7 @@ OnionMessenger::OnionMessenger()
 
 }
 
-void OnionMessenger::startApp()
+void OnionMessenger::StartApp()
 {
     // login
     // init

@@ -1,17 +1,19 @@
 #include "socket.h"
 
+
 Socket::Socket()
 {
-
+    // ???
 }
 
 int Socket::SendSocket()
+//int Socket()
 {
     // PathGenerate
     // EncryptMessage
     // SendMessage
+    return 0;
 }
-
 int Socket::RecvSocket()
 {
     // Thread
@@ -22,4 +24,5 @@ int Socket::RecvSocket()
     // dec(data)
     // if my data read
     // else forwarding
+    return 0;
 }

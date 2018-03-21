@@ -12,4 +12,5 @@ int Heartbeat::RecvBroadcast()
     // userinfo.getmail
     // pgp.searchkeys
     // updateUserinfo
+    return 0;
 }

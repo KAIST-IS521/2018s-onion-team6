@@ -6,8 +6,8 @@ class Shell
 {
 public:
     Shell();
-    virtual ~Shell();
-
+    ~Shell();
+ //   virtual ~Shell();
     // Prompt
 
 

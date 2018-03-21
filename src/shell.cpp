@@ -5,9 +5,10 @@ Shell::Shell()
     // Create RecvSocket
 }
 
-int Shell:Prompt()
+//int Shell::Prompt()
+int Shell()
 {
-    // waiting command
+   // waiting command
     // command parsing
     // help
     // sendmsg
@@ -15,4 +16,5 @@ int Shell:Prompt()
     // ls
     // cat
     // ...
+return 0;
 }

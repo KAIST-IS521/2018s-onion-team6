@@ -8,9 +8,9 @@ public:
     //std::map<String, UserInfo>* UserInfoMap;
 
     OnionMessenger();
-    virtual ~OnionMessenger();
-
-    void StartApp();
+ //   virtual ~OnionMessenger();
+     ~OnionMessenger();
+     void StartApp();
 
 private:
     // Login()

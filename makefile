@@ -25,4 +25,4 @@ default :
 
 
 clean:
-	$(RM) $(H).o $(O).o $(C).o $(S).o $(U).o $(P).o
+	$(RM) 1 $(H).o $(O).o $(C).o $(S).o $(U).o $(P).o
