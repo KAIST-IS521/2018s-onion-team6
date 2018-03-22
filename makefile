@@ -2,8 +2,10 @@
 #CC=gcc
 RM=rm
 CC=clang++-5.0
-OBJ_OPT=-stdlib=libc++
+#CC=g++
+OBJ_OPT=-v -std=c++11 -stdlib=libstdc++
 
+OPTION=
 #OPTION=-mllvm -sub -llvm -fla
 
 SRC=src/
@@ -23,6 +25,5 @@ default :
 	$(CC) $(OPTION) -o ./CLIENT/onion src/main.cpp $(H).o $(O).o $(P).o $(C).o $(S).o $(U).o
 
 
-
 clean:
-	$(RM) 1 $(H).o $(O).o $(C).o $(S).o $(U).o $(P).o
+	$(RM)  $(H).o $(O).o $(C).o $(S).o $(U).o $(P).o
