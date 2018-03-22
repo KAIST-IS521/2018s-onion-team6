@@ -21,7 +21,7 @@ RUN chmod -R 750 /home/jff
 
 
 ###### PROB  SETUP #####
-ADD ./CLIENT/client /home/jff/client
+ADD ./CLIENT/onion /home/jff/onion
 ADD ./private.key /home/jff/private.key
 ####### XINETD SETTING
 #ADD ./SET/load.xinetd /etc/xinetd.d/load
