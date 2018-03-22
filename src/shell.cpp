@@ -19,7 +19,8 @@ Shell::Shell(const string id, const string pw)
 
 int Shell::printPrompt()
 {
-    if(!(list
+//    if(!(list
+
     // waiting command
     // command parsing
     // help
