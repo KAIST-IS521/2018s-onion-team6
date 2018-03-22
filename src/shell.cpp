@@ -7,7 +7,6 @@ using namespace std;
 
 Shell::Shell(const string id, const string pw)
 {
-    // Create RecvSocke
     private_id = id;
     private_pw = pw;
     push_list("#");
@@ -52,28 +51,66 @@ void Shell::pop_list()
 
 int Shell::cshell()
 {
-    string cmd;
     printPrompt();
-    getline(cin,cmd);
-
-    if( !cmd.compare("help") || !cmd.compare("?") )
-        usage();
-    else if( !cmd.compare("ls") )
-        ls();
-    else if ( !cmd.substr(0,3).compare("cat"))
-        cat(cmd.substr(4,252)); //max size
-    else if ( !cmd.compare("exit") )
-        exit(0);
-    else if ( cmd.substr(0,4).find("send") != string::npos )
+    list<string>::iterator iter = prompt.end();
+    string shell=(*--iter);
+/*
+    cout << "--------------" <<endl;
+    cout << shell  << endl;
+    cout << "--------------" <<endl;
+*/
+    setbuf(stdin,NULL);
+    setbuf(stdout,NULL);
+    if(!shell.substr(0,1).compare("#"))
     {
-        string git_id;
-        cout << "TARGET GIT_ID : ";
-        cin >> git_id;
+        string cmd;
+        getline(cin,cmd);
+
+        if( !cmd.substr(0,4).compare("help") || !cmd.substr(0,1).compare("?") )
+        {
+            usage();
+        }
+        else if( !cmd.substr(0,2).compare("ls") )
+        {
+            ls();
+        }
+        else if ( !cmd.substr(0,3).compare("cat"))
+        {
+            if(cmd.size()>4)
+                cat(cmd.substr(4,250)); //max path size is 255
+        }
+        else if ( !cmd.substr(0,4).compare("exit") )
+        {
+            exit(0);
+        }
+        else if ( !cmd.substr(0,4).compare("send") )
+        {
+            if(cmd.size()>5)
+                send(cmd.substr(5,250));
+        }
+        else
+        {
+            usage();
+        }
+    }
+    else if(!shell.substr(0,4).compare("send"))
+    {
+        string msg;
+        getline(cin,msg); // cmd will be message
+        //SEARCH GIT_ID LIST IN MEMBER CLASS
+        if(msg.size() <1)
+        {
+            prompt.clear();
+            push_list("#");
+        }
     }
     else
-        usage();
+    {
+        prompt.clear();
+        push_list("#");
+    }
 
-    return 0;
+    return 1;
 }
 int Shell::cat(const string gitId)
 {
@@ -90,6 +127,7 @@ int Shell::cat(const string gitId)
     ifstream openFile(fileName.data());
     if(openFile.is_open())
     {
+        string cmd;
         string line;
         while(getline(openFile, line))
         {
@@ -97,17 +135,25 @@ int Shell::cat(const string gitId)
         }
         cout << endl;
     }
+    else
+    {
+        cout << "No file for " << gitId << endl;
+    }
+
     return 0;
 }
 int Shell::ls()
 {
-    cout << "[D] shell::ls() "<<endl;
-    // print recv message list
-    //
+    cout << "[D] shell::ls() "<< endl;
     return 0;
 }
-int Shell::send()
+int Shell::send(const string gitId)
 {
+    // [!] Verify gitId list
+    //if( SERCH LIST( gitId )) {}
+    prompt.push_back("send @ <"+gitId+"> : ");
+
+    // SEND SOCKET MESAGE
 
     return 0;
 }

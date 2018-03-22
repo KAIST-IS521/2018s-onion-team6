@@ -22,7 +22,7 @@ class Shell
         void usage();
         int cat(const string v1);
         int ls();
-        int send();
+        int send(const string v1);
 
 };
 
