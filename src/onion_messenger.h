@@ -9,7 +9,7 @@
 class OnionMessenger
 {
 public:
-    //std::map<String, UserInfo>* UserInfoMap;
+    std::map<String, UserInfo>* UserInfoMap;
 
     OnionMessenger();
     ~OnionMessenger();
