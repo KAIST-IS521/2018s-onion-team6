@@ -3,7 +3,7 @@
 
 #include<iostream>
 #include<list>
-
+#include "user_info.h"
 using namespace std;
 
 class Shell
@@ -18,6 +18,7 @@ class Shell
         ~Shell();
         void run();
         void login();
+        string GetPass();
         int printPrompt();
         void push_list(const string v1);
         void pop_list();

@@ -5,6 +5,8 @@
 
 using namespace std;
 
+extern UserInfo * myInfo;
+
 Shell::Shell()
 {
     login();
@@ -20,13 +22,19 @@ void Shell::login()
     string s_id;
     string s_pw;
 
+
     cout << "GIT_ID > ";
     cin >>s_id;
-    cout << "PASS >";
+    cout << "PASS > ";
     cin >>s_pw;
     private_id = s_id;
     private_pw = s_pw;
+    myInfo->SetGithubId(s_id);
 
+}
+string Shell::GetPass()
+{
+    return private_pw;
 }
 void Shell::usage()
 {
