@@ -34,6 +34,10 @@ int Heartbeat::SetSocket()
 
 void Heartbeat::Start()
 {
+	std::thread send_broadcast_thread([this] { SendBroadcast();} );
+    std::thread recv_broadcast_thread([this] { RecvBroadcast();} );
+    send_broadcast_thread.join();
+    recv_broadcast_thread.join();
 }
 
 void Heartbeat::SendBroadcast()
