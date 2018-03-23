@@ -1,7 +1,9 @@
 #ifndef SHELL_H
 #define SHELL_H
+
 #include<iostream>
 #include<list>
+
 using namespace std;
 
 class Shell
