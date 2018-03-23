@@ -1,6 +1,10 @@
 #ifndef ONION_MESSENGER_H
 #define ONION_MESSENGER_H
 
+#include <iostream>
+
+#include "shell.h"
+#include "heartbeat.h"
 
 class OnionMessenger
 {
@@ -8,9 +12,8 @@ public:
     //std::map<String, UserInfo>* UserInfoMap;
 
     OnionMessenger();
- //   virtual ~OnionMessenger();
-     ~OnionMessenger();
-     void StartApp();
+    ~OnionMessenger();
+    void StartApp();
 
 private:
     // Login()
