@@ -10,6 +10,8 @@
 
 using namespace std;
 
+extern UserInfo * myInfo;
+
 class OnionMessenger
 {
 public:

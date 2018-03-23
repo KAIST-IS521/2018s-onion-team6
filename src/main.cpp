@@ -8,7 +8,6 @@ UserInfo * myInfo;
 
 int main(int argc, char *argv[])
 {
-    myInfo = new UserInfo();
     cout << "[D] TEST START MAIN "<< endl;
     OnionMessenger *messenger = new OnionMessenger();
     messenger->StartApp();

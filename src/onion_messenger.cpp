@@ -3,22 +3,15 @@
 using namespace std;
 OnionMessenger::OnionMessenger()
 {
-
+    myInfo = new UserInfo();
 }
 
 void OnionMessenger::StartApp()
 {
 
     Shell *sha = new Shell();
-
-    // Shell *sha = new Shell(id,pw);
-    Heartbeat *heartbeat = new Heartbeat();
+    // Check passphrase
+    Heartbeat *heartbeat = new Heartbeat(this->UserInfoMap);
     heartbeat->Start();
     sha->run();
-
-    // login
-    // init
-    // broadcast
-    // pgp private key import
-    // shell prompt
 }
