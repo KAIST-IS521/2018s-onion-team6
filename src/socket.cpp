@@ -57,6 +57,10 @@ UDPSocket::~UDPSocket()
 
 void UDPSocket::SetDestAddr(char* dest_addr, int port)
 {
+	this->_recvaddr.sin_family = AF_INET;
+    this->_recvaddr.sin_addr.s_addr = inet_addr(dest_addr);
+    this->_recvaddr.sin_port = port;
+    memset(this->_recvaddr.sin_zero, '\0', sizeof this->_recvaddr.sin_zero);
 }
 
 int UDPSocket::Send(char* data, size_t len)
