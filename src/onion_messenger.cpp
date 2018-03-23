@@ -1,12 +1,10 @@
 #include "onion_messenger.h"
-#include "Shell.h"
-#include <iostream>
+
 using namespace std;
 OnionMessenger::OnionMessenger()
 {
 
 }
-
 
 void OnionMessenger::StartApp()
 {
@@ -19,7 +17,9 @@ void OnionMessenger::StartApp()
     cout << "INPUT Pass > ";
     cin >> pw;
 
-    Shell *sha = new Shell(id,pw);
+    // Shell *sha = new Shell(id,pw);
+    Heartbeat *heartbeat = new Heartbeat();
+    heartbeat->Start();
 
     // login
     // init
