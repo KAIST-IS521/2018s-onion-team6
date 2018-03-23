@@ -3,9 +3,9 @@
 RM=rm
 CC=clang++-5.0
 #CC=g++
-OBJ_OPT=-v -std=c++11 -stdlib=libstdc++
+OBJ_OPT=-v -std=c++11
 
-OPTION=
+OPTION= -lpthread -std=c++11 
 #OPTION=-mllvm -sub -llvm -fla
 
 SRC=src/
