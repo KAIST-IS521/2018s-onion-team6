@@ -76,6 +76,16 @@ int UDPSocket::Send(char* data, size_t len)
 
 int UDPSocket::Recv(size_t len)
 {
+	char buf[MAX_BUF_LEN];
+    struct sockaddr_in src_addr;
+    int addrlen = sizeof(src_addr);
+    int rv = recvfrom(this->sd, buf, len, 0, (struct sockaddr*)&src_addr, (socklen_t*)&addrlen);
+    if (rv < 0)
+    {
+        perror("send");
+        exit(-1);
+    }
+    return rv;
 }
 
 TCPSocket::TCPSocket()
@@ -106,5 +116,15 @@ int TCPSocket::Send(char* data, size_t len)
 }
 
 int TCPSocket::Recv(size_t len)
+{
+	char buf[MAX_BUF_LEN];
+    int rv = recv(this->sd, buf, len, 0);
+    if (rv < 0)
+    {
+        perror("send");
+        exit(-1);
+    }
+    return rv;
 }
+
 
