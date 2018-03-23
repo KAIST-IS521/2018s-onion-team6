@@ -6,14 +6,18 @@
 #include <thread>
 #include <chrono>
 #include <unistd.h>
+#include <map>
 
+#include "json/json.h"
 #include "config.h"
 #include "socket.h"
+#include "user_info.h"
+#include "onion_messenger.h"
 
 class Heartbeat
 {
     public:
-        Heartbeat();
+        Heartbeat(map<string, UserInfo>* UserInfoMap);
         ~Heartbeat();
 
         void Start();
