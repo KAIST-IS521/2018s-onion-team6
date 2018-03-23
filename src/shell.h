@@ -12,9 +12,10 @@ class Shell
         list <string> prompt;
 
     public:
-        Shell(const string id, const string pw );
+        Shell();
         ~Shell();
-
+        void run();
+        void login();
         int printPrompt();
         void push_list(const string v1);
         void pop_list();
