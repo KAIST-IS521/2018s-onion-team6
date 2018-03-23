@@ -10,16 +10,18 @@ RUN apt-get install -y openssh-server
 #RUN useradd -d /home/guest guest -s /bin/bash
 RUN useradd -d /home/jff jff -s /bin/bash
 RUN mkdir /home/jff
+RUN mkdir /home/jff/MEMBER
 
 RUN echo "jff:jffhappy" | chpasswd jff
 
 
 ########## HOME DIR SETTING #############
 RUN chown -R root:jff /home/jff
-RUN chmod 750 /home/jff
+RUN chmod -R 750 /home/jff
+
 
 ###### PROB  SETUP #####
-ADD ./CLIENT/client /home/jff/client
+ADD ./CLIENT/onion /home/jff/onion
 ADD ./private.key /home/jff/private.key
 ####### XINETD SETTING
 #ADD ./SET/load.xinetd /etc/xinetd.d/load
