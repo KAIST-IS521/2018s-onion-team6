@@ -12,6 +12,14 @@ Socket::~Socket()
 
 int Socket::SetSockOpt(int level, int optname, const void *optval, socklen_t optlen)
 {
+	int rv = setsockopt(this->sd, level, optname, optval, optlen);
+    if (rv == -1)
+    {
+        perror("setsockopt");
+        exit(-1);
+    }
+    return rv;
+}
 }
 
 int Socket::Bind(int port)
