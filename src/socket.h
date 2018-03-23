@@ -8,9 +8,6 @@
 #include<cstring>
 #include<iostream>
 
-#define MAX_BUF_LEN 1024
-#define MAX_SEND_LEN 1024
-
 using namespace std;
 
 class Socket
