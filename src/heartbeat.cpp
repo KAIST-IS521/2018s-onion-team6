@@ -1,4 +1,4 @@
-nclude "heartbeat.h"
+#include "heartbeat.h"
 
 Heartbeat::Heartbeat()
 {
@@ -42,6 +42,19 @@ void Heartbeat::Start()
 
 void Heartbeat::SendBroadcast()
 {
+	int rv = 0;
+    int len = 0;
+    char data[MAX_BUF_LEN];
+    std::chrono::seconds period(BROADCAST_PERIOD);
+
+    while(1)
+    {
+        memcpy(data, "Github Id", strlen("Github Id"));
+        len = strlen(data);
+        rv = this->_send_sock->Send(data, len);
+        cout << "Send Broadcast" << endl;
+        std::this_thread::sleep_for(period);
+    }
 }
 
 void Heartbeat::RecvBroadcast()
