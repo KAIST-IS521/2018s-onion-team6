@@ -20,7 +20,6 @@ int Socket::SetSockOpt(int level, int optname, const void *optval, socklen_t opt
     }
     return rv;
 }
-}
 
 int Socket::Bind(int port)
 {
