@@ -62,9 +62,17 @@ void UDPSocket::SetDestAddr(char* dest_addr, int port)
     memset(this->_recvaddr.sin_zero, '\0', sizeof this->_recvaddr.sin_zero);
 }
 
-int UDPSocket::Send(char* data, size_t len)
+int UDPSocket::Send(string data)
+//int UDPSocket::Send(char* data, size_t len)
 {
-	int rv = sendto(this->sd, data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
+    const char *c_data = data.c_str();
+    int len = data.length();
+
+    if(len > MAX_UDP_BUF_SIZE)
+        len = MAX_UDP_BUF_SIZE;
+
+    int rv = sendto(this->sd, c_data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
+    //int rv = sendto(this->sd, data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
     if (rv < 0)
     {
         perror("send");

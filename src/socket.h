@@ -32,7 +32,8 @@ public:
     virtual ~UDPSocket();
 
     void SetDestAddr(char* dest_addr, int port);
-    int Send(char* data, size_t len);
+    int Send(string data);
+    //int Send(char* data, size_t len);
     int Recv(size_t len);
 private:
     struct sockaddr_in _recvaddr;
