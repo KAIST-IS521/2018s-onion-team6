@@ -14,6 +14,8 @@
 #include "user_info.h"
 #include "onion_messenger.h"
 
+extern UserInfo * myInfo;
+
 class Heartbeat
 {
     public:

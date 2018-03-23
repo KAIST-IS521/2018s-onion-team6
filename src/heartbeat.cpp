@@ -1,6 +1,6 @@
 #include "heartbeat.h"
 
-Heartbeat::Heartbeat()
+Heartbeat::Heartbeat(map<string, UserInfo>* UserInfoMap)
 {
     Initialize();
 }
@@ -42,16 +42,18 @@ void Heartbeat::Start()
 
 void Heartbeat::SendBroadcast()
 {
-	int rv = 0;
-    int len = 0;
-    char data[MAX_BUF_LEN];
+    int rv;
     std::chrono::seconds period(BROADCAST_PERIOD);
 
     while(1)
     {
-        memcpy(data, "Github Id", strlen("Github Id"));
-        len = strlen(data);
-        rv = this->send_sock->Send(data, len);
+        Json::Value root;
+        root["github_id"] = myInfo->GetGithubId();
+        root["pgp_key_id"] = myInfo->GetPGPKeyId();
+
+        Json::StyledWriter writer;
+        std::string information = writer.write( root );
+        rv = this->send_sock->Send(information);
         cout << "Send Broadcast" << endl;
         std::this_thread::sleep_for(period);
     }
