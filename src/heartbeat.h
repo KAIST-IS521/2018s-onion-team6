@@ -19,8 +19,8 @@ class Heartbeat
         void Start();
 
     private:
-        UDPSocket* _send_sock;
-        UDPSocket* _recv_sock;
+        UDPSocket* send_sock;
+        UDPSocket* recv_sock;
 
         int Initialize();
         int CreateSocket();

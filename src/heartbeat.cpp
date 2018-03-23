@@ -14,21 +14,21 @@ int Heartbeat::Initialize()
 
 int Heartbeat::CreateSocket()
 {
-	this->_send_sock = new UDPSocket();
-    this->_recv_sock = new UDPSocket();
+    this->send_sock = new UDPSocket();
+    this->recv_sock = new UDPSocket();
     return 0;
 }
 
 int Heartbeat::SetSocket()
 {
 	int broadcast = 1;
-    this->_send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    this->_recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    this->send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
 
-    this->_send_sock->Bind(HEARTBEAT_SEND_PORT);
-    this->_recv_sock->Bind(HEARTBEAT_RECV_PORT);
+    this->send_sock->Bind(HEARTBEAT_SEND_PORT);
+    this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
 
-    this->_send_sock->SetDestAddr(BROADCAST_ADDR, HEARTBEAT_SEND_PORT);
+    this->send_sock->SetDestAddr(BROADCAST_ADDR, HEARTBEAT_SEND_PORT);
     return 0;
 }
 
@@ -51,7 +51,7 @@ void Heartbeat::SendBroadcast()
     {
         memcpy(data, "Github Id", strlen("Github Id"));
         len = strlen(data);
-        rv = this->_send_sock->Send(data, len);
+        rv = this->send_sock->Send(data, len);
         cout << "Send Broadcast" << endl;
         std::this_thread::sleep_for(period);
     }
