@@ -8,18 +8,17 @@ OnionMessenger::OnionMessenger()
 
 void OnionMessenger::StartApp()
 {
-    string id;
-    string pw;
 
-    cout << "INPUT ID > ";
-    cin >> id;
+    Shell *sha = new Shell();
 
-    cout << "INPUT Pass > ";
-    cin >> pw;
 
+<<<<<<< HEAD
     // Shell *sha = new Shell(id,pw);
     Heartbeat *heartbeat = new Heartbeat();
     heartbeat->Start();
+=======
+    sha->run();
+>>>>>>> sangsup
 
     // login
     // init

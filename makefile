@@ -26,4 +26,5 @@ default :
 
 
 clean:
+	$(RM) ./CLIENT/*
 	$(RM)  $(H).o $(O).o $(C).o $(S).o $(U).o $(P).o

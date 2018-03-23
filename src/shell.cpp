@@ -5,13 +5,27 @@
 
 using namespace std;
 
-Shell::Shell(const string id, const string pw)
+Shell::Shell()
 {
-    private_id = id;
-    private_pw = pw;
+    login();
+}
+void Shell::run()
+{
     push_list("#");
-
     while(1) cshell();
+
+}
+void Shell::login()
+{
+    string s_id;
+    string s_pw;
+
+    cout << "GIT_ID > ";
+    cin >>s_id;
+    cout << "PASS >";
+    cin >>s_pw;
+    private_id = s_id;
+    private_pw = s_pw;
 
 }
 void Shell::usage()
