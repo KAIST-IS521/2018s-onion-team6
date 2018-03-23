@@ -65,6 +65,13 @@ void UDPSocket::SetDestAddr(char* dest_addr, int port)
 
 int UDPSocket::Send(char* data, size_t len)
 {
+	int rv = sendto(this->sd, data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
+    if (rv < 0)
+    {
+        perror("send");
+        exit(-1);
+    }
+    return rv;
 }
 
 int UDPSocket::Recv(size_t len)
@@ -89,6 +96,13 @@ TCPSocket::~TCPSocket()
 
 int TCPSocket::Send(char* data, size_t len)
 {
+	int rv = send(this->sd, data, len, 0);
+    if (rv < 0)
+    {
+        perror("send");
+        exit(-1);
+    }
+    return rv;
 }
 
 int TCPSocket::Recv(size_t len)
