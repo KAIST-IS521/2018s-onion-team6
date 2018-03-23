@@ -2,14 +2,18 @@
 #define ONION_MESSENGER_H
 
 #include <iostream>
+#include <map>
 
 #include "shell.h"
 #include "heartbeat.h"
+#include "user_info.h"
+
+using namespace std;
 
 class OnionMessenger
 {
 public:
-    std::map<String, UserInfo>* UserInfoMap;
+    map<string, UserInfo>* UserInfoMap;
 
     OnionMessenger();
     ~OnionMessenger();
