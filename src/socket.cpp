@@ -1,28 +1,54 @@
 #include "socket.h"
 
-
 Socket::Socket()
 {
-    // ???
+
 }
 
-int Socket::SendSocket()
-//int Socket()
+Socket::~Socket()
 {
-    // PathGenerate
-    // EncryptMessage
-    // SendMessage
-    return 0;
+
 }
-int Socket::RecvSocket()
+
+int Socket::SetSockOpt(int level, int optname, const void *optval, socklen_t optlen)
 {
-    // Thread
-    // listen
-    // accept
-    // len = recv(4)
-    // data = recv(len)
-    // dec(data)
-    // if my data read
-    // else forwarding
-    return 0;
 }
+
+int Socket::Bind(int port)
+{
+}
+
+UDPSocket::UDPSocket()
+{
+
+UDPSocket::~UDPSocket()
+{
+}
+
+void UDPSocket::SetDestAddr(char* dest_addr, int port)
+{
+}
+
+int UDPSocket::Send(char* data, size_t len)
+{
+}
+
+int UDPSocket::Recv(size_t len)
+{
+}
+
+TCPSocket::TCPSocket()
+{
+}
+
+TCPSocket::~TCPSocket()
+{
+}
+
+int TCPSocket::Send(char* data, size_t len)
+{
+}
+
+int TCPSocket::Recv(size_t len)
+}
+
