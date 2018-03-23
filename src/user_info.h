@@ -1,6 +1,10 @@
 #ifndef USER_INFO_H
 #define USER_INFO_H
 
+#include<iostream>
+
+using namespace std;
+
 class UserInfo
 {
 public:
