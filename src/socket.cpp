@@ -24,6 +24,19 @@ int Socket::SetSockOpt(int level, int optname, const void *optval, socklen_t opt
 
 int Socket::Bind(int port)
 {
+	struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = port;
+    memset(addr.sin_zero, '\0', sizeof addr.sin_zero);
+
+    int rv = bind(this->sd, (struct sockaddr *) &addr, sizeof addr);
+    if (rv < 0)
+    {
+        perror("bind");
+        exit(-1);
+    }
+    return rv;
 }
 
 UDPSocket::UDPSocket()
