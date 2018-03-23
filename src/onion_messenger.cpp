@@ -11,14 +11,10 @@ void OnionMessenger::StartApp()
 
     Shell *sha = new Shell();
 
-
-<<<<<<< HEAD
     // Shell *sha = new Shell(id,pw);
     Heartbeat *heartbeat = new Heartbeat();
     heartbeat->Start();
-=======
     sha->run();
->>>>>>> sangsup
 
     // login
     // init
