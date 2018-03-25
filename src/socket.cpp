@@ -128,10 +128,27 @@ TCPSocket::~TCPSocket()
 {
 	close(this->sd);
 }
-
+/*
 int TCPSocket::Send(char* data, size_t len)
 {
 	int rv = send(this->sd, data, len, 0);
+    if (rv < 0)
+    {
+        perror("send");
+        exit(-1);
+    }
+    return rv;
+}
+*/
+int TCPSocket::Send(string data)
+{
+    const char *c_data = data.c_str();
+    int len = data.length();
+
+    if(len > MAX_UDP_BUF_SIZE)
+        len = MAX_UDP_BUF_SIZE;
+
+    int rv = send(this->sd, c_data, len, 0);
     if (rv < 0)
     {
         perror("send");

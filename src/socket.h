@@ -46,7 +46,8 @@ class TCPSocket : public Socket
         TCPSocket();
         virtual ~TCPSocket();
 
-        int Send(char* data, size_t len);
+        //int Send(char* data, size_t len);
+        int Send(string data);
         int Recv(size_t len);
 };
 
