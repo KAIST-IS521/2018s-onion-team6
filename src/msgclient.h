@@ -8,6 +8,10 @@
 #include "json/json.h"
 #include "user_info.h"
 #include "socket.h"
+#include <stdlib.h>
+#include <cstdlib>
+#include "user_info.h"
+#include <ctime>        // std::time
 
 using namespace std;
 
@@ -19,19 +23,19 @@ class MsgClient
 private:
     string receiver;
     string msg;
-    list<string> node_list;
     TCPSocket* send_sock;
+    array <string,100> node_list;
 
 public:
     MsgClient(string receiver, string msg);
     void Start();
     bool CheckReceiver();
-    void SetRoute();
     int SendMsg();
     int SendLength();
     int SendData();
     int EncryptMsg(string data);
-
+    int SetRoute();
+    int SendMessage();
 };
 
 #endif // MESSAGECLIENT_H
