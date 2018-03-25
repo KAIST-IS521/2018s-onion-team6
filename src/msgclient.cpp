@@ -4,14 +4,24 @@ MsgClient::MsgClient(string receiver, string msg)
 {
     this->receiver = receiver;
     this->msg = msg;
+    this->send_sock = new TCPSocket();
 }
 
 void MsgClient::Start()
 {
     if (CheckReceiver())
     {
+#ifdef MSGCLIENT_LOG
+        cout << "Find a client" << endl;
+#endif
         SetRoute();
-        SendMessage();
+        SendMsg();
+    }
+    else
+    {
+#ifdef MSGCLIENT_LOG
+        cout << "No such a client" << endl;
+#endif
     }
 }
 
@@ -24,10 +34,56 @@ bool MsgClient::CheckReceiver()
 
 void MsgClient::SetRoute()
 {
+#ifdef MSGCLIENT_LOG
+    this->node_list.push_back("test");
+    this->node_list.push_back("abcd");
+
+    list<string>::iterator iter;
+    for (iter = this->node_list.begin(); iter != this->node_list.end(); iter++)
+    {
+        cout << *iter << endl;
+    }
+#endif
+}
+
+int MsgClient::SendMsg()
+{
+    //this->send_sock->Connect(this->node_list.front());
+    this->send_sock->Connect("127.0.0.1");
+    SendLength();
+    SendData();
+}
+
+int MsgClient::SendLength()
+{
+    Json::Value root;
+    root["sender"] = myInfo->GetGithubId();
+    root["receiver"] = this->receiver;
+    root["length"] = this->msg.length();
+
+    Json::StyledWriter writer;
+    std::string data = writer.write( root );
+
+    EncryptMsg(data);
+    this->send_sock->Send(data);
 
 }
 
-int MsgClient::SendMessage()
+int MsgClient::SendData()
+{
+    Json::Value root;
+    root["sender"] = myInfo->GetGithubId();
+    root["receiver"] = this->receiver;
+    root["data"] = this->msg;
+
+    Json::StyledWriter writer;
+    std::string data = writer.write( root );
+
+    EncryptMsg(data);
+    this->send_sock->Send(data);
+}
+
+int MsgClient::EncryptMsg(string data)
 {
 
 }

@@ -5,7 +5,9 @@
 #include <unordered_map>
 #include <list>
 
+#include "json/json.h"
 #include "user_info.h"
+#include "socket.h"
 
 using namespace std;
 
@@ -18,13 +20,17 @@ private:
     string receiver;
     string msg;
     list<string> node_list;
+    TCPSocket* send_sock;
 
 public:
     MsgClient(string receiver, string msg);
     void Start();
     bool CheckReceiver();
     void SetRoute();
-    int SendMessage();
+    int SendMsg();
+    int SendLength();
+    int SendData();
+    int EncryptMsg(string data);
 
 };
 
