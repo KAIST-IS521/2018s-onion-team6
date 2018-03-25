@@ -2,15 +2,16 @@
 
 MsgServer::MsgServer()
 {
+
 }
 void MsgServer::Start()
 {
     std::thread serverRun([this] { RecvServer();});
-    serverRun.join();
+    serverRun.detach();
 }
 void MsgServer::RecvServer()
 {
-    p_server_sock = new serversocket(8888);
+    p_server_sock = new ServerSocket(8888);
     int err = p_server_sock->listen();
     if (err != 0)
     {
@@ -28,33 +29,27 @@ void MsgServer::RecvServer()
             continue;
         }
         std::thread acceptRun([this] { Worker(p_client_sock);});
-        acceptRun.join();
-        //std::thread myThread(&MsgServer::Worker, this);
-        //myThread.join();
-        //std::thread* t = new std::thread(MsgServer::Worker, p_client_sock);
+        acceptRun.detach();
+
+    }
+
+    delete p_server_sock;
 }
-
-delete p_server_sock;
-
-}
-
-void MsgServer::Worker(clientsocket* client_sock)
+void MsgServer::Worker(ClientSocket* client_sock)
 {
-        std::cout << "Got a client!" << std::endl;
-        socketaddress* addr = client_sock->get_sockaddr();
-        std::cout << addr->get_address() << ":" << addr->get_port() << std::endl;
-        while (true)
+    std::cout << "Got a client!" << std::endl;
+    SocketAddress* addr = client_sock->get_sockaddr();
+    std::cout << addr->get_address() << ":" << addr->get_port() << std::endl;
+    while (true)
+    {
+        std::string msg;
+        if (client_sock->read(msg) <= 0)
         {
-            std::string msg;
-            if (client_sock->read(msg) <= 0)
-            {
-                break;
-            }
-            std::cout << msg;
+            break;
         }
-        delete client_sock;
-        std::cout << "Client disconnected" << std::endl;
+        std::cout << msg;
+    }
+    delete client_sock;
+    std::cout << "Client disconnected" << std::endl;
 
 }
-
-

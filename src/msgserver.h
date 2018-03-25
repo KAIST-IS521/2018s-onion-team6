@@ -1,29 +1,26 @@
-#ifndef MSG_SERVER_H
-#define MSG_SERVER_H
+#ifndef MSGSERVER_H
+#define MSGSERVER_H
 
 #include<iostream>
 #include<cstdlib>
-#include <string>
-
 #include <cstring>
 #include <thread>
+
 #include "serversocket.h"
-//#include "tcpsocket.h"
-//#include "socketaddress.h"
+#include "clientsocket.h"
+
 class MsgServer
 {
-    public:
-        MsgServer();
-        ~MsgServer();
-        void RecvServer();
-        void Start();
-        void Worker(clientsocket* client_sock);
+public:
+    MsgServer();
+    ~MsgServer();
+    void RecvServer();
+    void Start();
+    void Worker(ClientSocket* client_sock);
 
-    private:
-        clientsocket * p_client_sock;
-        serversocket * p_server_sock;
-
+private:
+    ClientSocket * p_client_sock;
+    ServerSocket * p_server_sock;
 };
 
-
-#endif
+#endif // MSGSERVER_H
