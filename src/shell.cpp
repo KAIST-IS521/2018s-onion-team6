@@ -104,7 +104,10 @@ int Shell::cshell()
         else if ( !cmd.substr(0,4).compare("send") )
         {
             if(cmd.size()>5)
-                send(cmd.substr(5,250));
+            {
+                this->receiver = cmd.substr(5,250);
+                send(this->receiver);
+            }
         }
         else
         {
@@ -123,9 +126,11 @@ int Shell::cshell()
         }
         else
         {
-            MsgServer * clientMsg = new MsgServer();
-            clientMsg->MsgClient("127.0.0.1","AAAAAAAAAA");
-            delete clientMsg;
+            MsgClient *msg_client = new MsgClient(this->receiver, msg);
+            msg_client->Start();
+            //MsgServer * clientMsg = new MsgServer();
+            //clientMsg->MsgClient("127.0.0.1","AAAAAAAAAA");
+            //delete clientMsg;
         }
     }
     else
