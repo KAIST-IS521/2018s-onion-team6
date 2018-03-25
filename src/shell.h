@@ -6,6 +6,8 @@
 
 #include "user_info.h"
 #include "msgserver.h"
+#include "msgclient.h"
+
 using namespace std;
 
 extern UserInfo* myInfo;
@@ -16,6 +18,7 @@ class Shell
         string private_id;
         string private_pw;
         list <string> prompt;
+        string receiver;
 
     public:
         Shell();
