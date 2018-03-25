@@ -20,6 +20,7 @@ class Socket
 
         int SetSockOpt(int level, int optname, const void *optval, socklen_t optlen);
         int Bind(int port);
+        int Connect(string ip_addr);
 
     protected:
         int sd;

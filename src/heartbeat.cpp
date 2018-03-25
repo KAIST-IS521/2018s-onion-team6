@@ -56,7 +56,6 @@ void Heartbeat::SendBroadcast()
     this->send_sock->Bind(HEARTBEAT_SEND_PORT);
     this->send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
 
-
     int rv = 0;
     std::chrono::seconds period(BROADCAST_PERIOD);
 
@@ -75,7 +74,7 @@ void Heartbeat::SendBroadcast()
         // send data
         rv = this->send_sock->Send(information);
         if (rv > 0)
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
           cout << "Send Broadcast" << endl;
 #endif
         // delay 1s
@@ -85,12 +84,10 @@ void Heartbeat::SendBroadcast()
 
 void Heartbeat::RecvBroadcast()
 {
-
     int broadcast = 1;
     this->recv_sock = new UDPSocket();
     this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
     this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
-
 
     string *data;
 
@@ -98,7 +95,7 @@ void Heartbeat::RecvBroadcast()
     {
         // recv data
         data = this->recv_sock->Recv();
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
         cout << "Recv Broadcast" << endl;
 #endif
         // parse data to json format
@@ -127,11 +124,11 @@ void Heartbeat::RecvBroadcast()
                 newUser->SetGithubId(github_id);
                 newUser->SetIpAddr(data[1]);
                 newUser->SetPGPKeyId(pgp_key_id);
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
                 cout << UserInfoMap.size() << endl;
 #endif
                 UserInfoMap.insert(std::pair<string, UserInfo*>(github_id, newUser));
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
                 cout << UserInfoMap.size() << endl;
                 cout << UserInfoMap[github_id]->GetGithubId() << endl;
                 cout << UserInfoMap[github_id]->GetIpAddr() << endl;
@@ -142,7 +139,7 @@ void Heartbeat::RecvBroadcast()
             {
                 UserInfoMap[github_id]->SetIpAddr(data[1]);
                 UserInfoMap[github_id]->SetPGPKeyId(pgp_key_id);
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
                 cout << UserInfoMap[github_id]->GetGithubId() << endl;
                 cout << UserInfoMap[github_id]->GetIpAddr() << endl;
                 cout << UserInfoMap[github_id]->GetPGPKeyId() << endl;
@@ -151,12 +148,12 @@ void Heartbeat::RecvBroadcast()
         }
         else    // dead Client
         {
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
                 cout << UserInfoMap.size() << endl;
 #endif
             if(UserInfoMap.find(github_id) != UserInfoMap.end()) // to delete
                 UserInfoMap.erase(github_id);
-#ifdef DEBUG
+#ifdef HEARTBEAT_LOG
                 cout << UserInfoMap.size() << endl;
 #endif
         }
