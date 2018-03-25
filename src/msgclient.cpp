@@ -70,7 +70,11 @@ int MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    this->send_sock->Connect(this->node_list[0]);
+    string recv_ip = ((UserInfo*)(UserInfoMap[this->node_list[0]]))->GetIpAddr();
+    this->send_sock->Connect(recv_ip);
+#ifdef MSGCLIENT_H
+    cout << recv_ip << endl;
+#endif
     //this->send_sock->Connect("127.0.0.1");
     SendLength();
     SendData();
