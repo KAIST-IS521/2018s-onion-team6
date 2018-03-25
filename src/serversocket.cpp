@@ -1,21 +1,4 @@
 #include "serversocket.h"
-<<<<<<< HEAD
-/*
-serversocket::serversocket()
-{
-
-}
-*/
-serversocket::~serversocket()
-{
-    close();
-}
-
-int serversocket::listen()
-{
-
-    socketaddress* sockaddr = new socketaddress(address, port);
-=======
 
 ServerSocket::ServerSocket()
 {
@@ -47,7 +30,6 @@ int ServerSocket::listen()
 {
 
     SocketAddress* sockaddr = new SocketAddress(address, port);
->>>>>>> bbeb5875831d01fb0e3ab16dd0439d37f64f5a4d
     struct sockaddr_in addr = sockaddr->get_struct();
 
     sock_fd = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -78,20 +60,12 @@ int ServerSocket::listen()
 
     return 0;
 }
-<<<<<<< HEAD
-
-clientsocket* serversocket::accept()
-=======
 ClientSocket* ServerSocket::accept()
->>>>>>> bbeb5875831d01fb0e3ab16dd0439d37f64f5a4d
 {
     struct sockaddr_in from;
     socklen_t l = sizeof(from);
     int clientfd = ::accept(sock_fd, (struct sockaddr*)&from, &l);
 
-<<<<<<< HEAD
-    return new clientsocket(clientfd, from);
-=======
     return new ClientSocket(clientfd, from);
 }
 
@@ -112,5 +86,4 @@ bool ServerSocket::valid()
 int ServerSocket::get_socket()
 {
     return sock_fd;
->>>>>>> bbeb5875831d01fb0e3ab16dd0439d37f64f5a4d
 }
