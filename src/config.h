@@ -9,6 +9,8 @@
 
 #define MAX_UDP_BUF_SIZE 0xFF
 
+#define PRIVATEKEY_PATH "./private.key"
+
 #define MAX_BUF_LEN 1024
 #define MAX_SEND_LEN 1024
 
