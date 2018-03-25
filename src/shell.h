@@ -3,12 +3,8 @@
 
 #include<iostream>
 #include<list>
-
 #include "user_info.h"
-
 using namespace std;
-
-extern UserInfo* myInfo;
 
 class Shell
 {

@@ -3,6 +3,10 @@
 #include <cstdlib>
 #include <fstream>
 
+using namespace std;
+
+extern UserInfo * myInfo;
+
 Shell::Shell()
 {
     login();

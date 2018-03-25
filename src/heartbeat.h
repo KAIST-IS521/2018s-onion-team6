@@ -6,7 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <unistd.h>
-#include <unordered_map>
+#include <map>
 
 #include "json/json.h"
 #include "config.h"
@@ -14,15 +14,12 @@
 #include "user_info.h"
 #include "onion_messenger.h"
 
-using namespace std;
-
-extern UserInfo* myInfo;
-extern unordered_map<string, UserInfo*> UserInfoMap;
+extern UserInfo * myInfo;
 
 class Heartbeat
 {
     public:
-        Heartbeat();
+        Heartbeat(map<string, UserInfo>* UserInfoMap);
         ~Heartbeat();
 
         void Start();

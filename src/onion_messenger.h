@@ -2,23 +2,28 @@
 #define ONION_MESSENGER_H
 
 #include <iostream>
-#include <unordered_map>
+#include <map>
 
-#include "user_info.h"
 #include "shell.h"
 #include "heartbeat.h"
-#include "pgp.h"
+#include "user_info.h"
 
 using namespace std;
 
+extern UserInfo * myInfo;
+
 class OnionMessenger
 {
-    public:
-        OnionMessenger();
-        ~OnionMessenger();
-        void StartApp();
+public:
+    map<string, UserInfo>* UserInfoMap;
 
-    private:
+    OnionMessenger();
+    ~OnionMessenger();
+    void StartApp();
+
+private:
+    // Login()
+    // Initialize()
 };
 
 #endif // ONION_MESSENGER_H

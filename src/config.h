@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define DEBUG
+//#define DEBUG
 
 #define BROADCAST_PERIOD 1
 #define HEARTBEAT_SEND_PORT 7777
@@ -11,6 +11,7 @@
 
 #define PRIVATEKEY_PATH "./private.key"
 
+#define BUFF_SIZE 1024
 #define MAX_BUF_LEN 1024
 #define MAX_SEND_LEN 1024
 

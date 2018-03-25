@@ -1,8 +1,6 @@
 #include "onion_messenger.h"
 
-UserInfo* myInfo;
-unordered_map<string, UserInfo*> UserInfoMap;
-
+using namespace std;
 OnionMessenger::OnionMessenger()
 {
     myInfo = new UserInfo();
@@ -10,9 +8,10 @@ OnionMessenger::OnionMessenger()
 
 void OnionMessenger::StartApp()
 {
-    Shell *shell = new Shell();
-    PGP *pgp = new PGP(shell->GetPass());
-    Heartbeat *heartbeat = new Heartbeat();
+
+    Shell *sha = new Shell();
+    // Check passphrase
+    Heartbeat *heartbeat = new Heartbeat(this->UserInfoMap);
     heartbeat->Start();
-    shell->run();
+    sha->run();
 }

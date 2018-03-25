@@ -26,7 +26,7 @@ int Socket::Bind(int port)
 	struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(port);
+    addr.sin_port = port;
     memset(addr.sin_zero, '\0', sizeof addr.sin_zero);
 
     int rv = bind(this->sd, (struct sockaddr *) &addr, sizeof addr);
@@ -54,15 +54,16 @@ UDPSocket::~UDPSocket()
 	close(this->sd);
 }
 
-void UDPSocket::SetDestAddr(const char* dest_addr, int port)
+void UDPSocket::SetDestAddr(char* dest_addr, int port)
 {
-    this->recvaddr.sin_family = AF_INET;
-    this->recvaddr.sin_addr.s_addr = inet_addr(dest_addr);
-    this->recvaddr.sin_port = htons(port);
-    memset(this->recvaddr.sin_zero, '\0', sizeof this->recvaddr.sin_zero);
+	this->_recvaddr.sin_family = AF_INET;
+    this->_recvaddr.sin_addr.s_addr = inet_addr(dest_addr);
+    this->_recvaddr.sin_port = port;
+    memset(this->_recvaddr.sin_zero, '\0', sizeof this->_recvaddr.sin_zero);
 }
 
 int UDPSocket::Send(string data)
+//int UDPSocket::Send(char* data, size_t len)
 {
     const char *c_data = data.c_str();
     int len = data.length();
@@ -70,7 +71,8 @@ int UDPSocket::Send(string data)
     if(len > MAX_UDP_BUF_SIZE)
         len = MAX_UDP_BUF_SIZE;
 
-    int rv = sendto(this->sd, c_data, len, 0, (struct sockaddr*)&(this->recvaddr), sizeof recvaddr);
+    int rv = sendto(this->sd, c_data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
+    //int rv = sendto(this->sd, data, len, 0, (struct sockaddr*)&(this->_recvaddr), sizeof _recvaddr);
     if (rv < 0)
     {
         perror("send");
@@ -79,22 +81,18 @@ int UDPSocket::Send(string data)
     return rv;
 }
 
-string* UDPSocket::Recv()
+int UDPSocket::Recv(size_t len)
 {
-    char buf[MAX_UDP_BUF_SIZE];
+	char buf[MAX_BUF_LEN];
     struct sockaddr_in src_addr;
     int addrlen = sizeof(src_addr);
-    int rv = recvfrom(this->sd, buf, MAX_UDP_BUF_SIZE-1, 0, (struct sockaddr*)&src_addr, (socklen_t*)&addrlen);
+    int rv = recvfrom(this->sd, buf, len, 0, (struct sockaddr*)&src_addr, (socklen_t*)&addrlen);
     if (rv < 0)
     {
-        perror("recv");
+        perror("send");
         exit(-1);
     }
-
-    string *data = new string[2];
-    data[0] = buf;
-    data[1] = inet_ntoa(src_addr.sin_addr);
-    return data;
+    return rv;
 }
 
 TCPSocket::TCPSocket()
