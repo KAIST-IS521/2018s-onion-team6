@@ -72,7 +72,7 @@ int MsgClient::SendMsg()
 {
     string recv_ip = ((UserInfo*)(UserInfoMap[this->node_list[0]]))->GetIpAddr();
     this->send_sock->Connect(recv_ip);
-#ifdef MSGCLIENT_H
+#ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
     //this->send_sock->Connect("127.0.0.1");
