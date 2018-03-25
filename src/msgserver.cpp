@@ -1,5 +1,6 @@
 #include "msgserver.h"
 
+
 MsgServer::MsgServer()
 {
 
@@ -57,7 +58,6 @@ void MsgServer::RecvServer()
     while (true)
     {
         p_client_sock = p_server_sock->accept();
-
         if (!p_client_sock->valid())
         {
             delete p_client_sock;
@@ -70,6 +70,39 @@ void MsgServer::RecvServer()
 
     delete p_server_sock;
 }
+int MsgServer::PGPDecrpyt(string msg)
+{
+    //try PGP decrypt
+
+    string decryptedMsg;// = decrypted_pgp_function;
+
+    if (1) // decrppt_pgp_function ) try catch
+    {
+
+    }
+    else //success decrpyt -> it's means no error ..
+    {
+        if(1) //exist next node
+        {
+            string github_id=""; // = nextNode;
+            string nextip="";
+            nextip = UserInfoMap[github_id]->GetIpAddr();
+            //"Create Client socket";
+            //socket(nextip,cypher_msg);
+            //close socket
+        }
+        else // my msg
+        {
+            cout << "plain message" << endl;
+        }
+    }
+    return 1;
+}
+//
+//
+//  UserInfo* myInfo;
+//  4 unordered_map<string, UserInfo*> UserInfoMap;
+//
 void MsgServer::Worker(ClientSocket* client_sock)
 {
     std::cout << "Got a client!" << std::endl;
