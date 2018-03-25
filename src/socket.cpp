@@ -38,6 +38,22 @@ int Socket::Bind(int port)
     return rv;
 }
 
+int Socket::Connect(string ip_addr)
+{
+    struct sockaddr_in serv_addr;
+    memset(&serv_addr, '0', sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(MSG_SERVER_PORT);
+    serv_addr.sin_addr.s_addr = inet_addr(ip_addr.c_str());
+    int rv = connect(this->sd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+    if (rv < 0)
+    {
+        perror("connect");
+        exit(-1);
+    }
+    return rv;
+}
+
 UDPSocket::UDPSocket()
 {
 	int sd = socket(AF_INET, SOCK_DGRAM, 0);
