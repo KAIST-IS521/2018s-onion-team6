@@ -6,10 +6,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cerrno>
-#include "tcpsocket.h"
+#include "clientsocket.h"
 
-
-class serversocket 
+class serversocket
 {
 	protected:
 		int port;
@@ -18,13 +17,16 @@ class serversocket
 		std::string address;
 
 	public:
+       //         serversocket();
 		serversocket(int port)
 		{
 			this->port = port;
 			backlog = 10;
 			address = "0.0.0.0";
 		}
-		serversocket(int port, int backlog)
+
+                /*
+                serversocket(int port, int backlog)
 		{
 			this->port = port;
 			this->backlog = backlog;
@@ -36,10 +38,11 @@ class serversocket
 			this->backlog = backlog;
 			this->address = address;
 		}
-
+*/
 		~serversocket();
+
 		int listen();
-		tcpsocket* accept();
+		clientsocket* accept();
 		void close()
 		{
 			if (sock_fd == -1)

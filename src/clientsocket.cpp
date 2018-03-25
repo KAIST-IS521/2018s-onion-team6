@@ -1,27 +1,36 @@
-#include "tcpsocket.h"
-#include <string>
-#include <fcntl.h>
+#include "clientsocket.h"
 
 #define BUFF_SIZE 1024
 
-tcpsocket::~tcpsocket()
+clientsocket::clientsocket()
+{
+}
+
+clientsocket::clientsocket(int socket, struct sockaddr_in addr)
+{
+    sock_fd = socket;
+    address = addr;
+    sockaddr = new socketaddress(addr);
+}
+
+clientsocket::~clientsocket()
 {
 	delete sockaddr;
 	close();
 }
-int tcpsocket::send(std::string data)
+int clientsocket::send(std::string data)
 {
 	return send(data.c_str(), data.length(), 0);
 }
-int tcpsocket::send(const char* buf, int len, int flags)
+int clientsocket::send(const char* buf, int len, int flags)
 {
 	return ::send(sock_fd, buf, len, flags);
 }
-int tcpsocket::read(char* buf, int len)
+int clientsocket::read(char* buf, int len)
 {
 	return ::recv(sock_fd, buf, len, 0);
 }
-int tcpsocket::read(std::string& msg)
+int clientsocket::read(std::string& msg)
 {
 	int size_total = 0;
 	char buffer[BUFF_SIZE];
@@ -58,13 +67,13 @@ int tcpsocket::read(std::string& msg)
 
 	return size_total;
 }
-void tcpsocket::set_blocking()
+void clientsocket::set_blocking()
 {
 	int opts = fcntl(sock_fd, F_GETFL);
 	opts = opts & (~O_NONBLOCK);
 	fcntl(sock_fd, F_SETFL, opts);
 }
-void tcpsocket::set_nonblocking()
+void clientsocket::set_nonblocking()
 {
 	fcntl(sock_fd, F_SETFL, O_NONBLOCK);
 }

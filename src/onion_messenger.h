@@ -7,6 +7,8 @@
 #include "shell.h"
 #include "heartbeat.h"
 #include "user_info.h"
+#include "msgserver.h"
+
 
 using namespace std;
 

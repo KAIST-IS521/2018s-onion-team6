@@ -19,7 +19,8 @@ P="pgp"
 J="jsoncpp"
 SS="serversocket"
 SA="socketaddress"
-TA="tcpsocket"
+TA="clientsocket"
+MS="msgserver"
 
 default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(O).cpp $(JSON_OPTION)
@@ -31,9 +32,10 @@ default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(SS).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(SA).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(TA).cpp $(JSON_OPTION)
+	$(CC) $(OBJ_OPT) -c $(SRC)$(MS).cpp $(JSON_OPTION)
 
 
-	$(CC) $(OPTION) -o ./CLIENT/onion src/main.cpp $(H).o $(O).o $(P).o $(C).o $(S).o $(U).o $(SRC)$(J).cpp $(SS).o $(SA).o $(TA).o  $(JSON_OPTION)
+	$(CC) $(OPTION) -o ./CLIENT/onion src/main.cpp $(H).o $(O).o $(P).o $(C).o $(S).o $(U).o $(SRC)$(J).cpp $(SS).o $(SA).o $(TA).o $(MS).o  $(JSON_OPTION)
 
 
 clean:

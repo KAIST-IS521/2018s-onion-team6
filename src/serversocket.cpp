@@ -1,5 +1,10 @@
 #include "serversocket.h"
+/*
+serversocket::serversocket()
+{
 
+}
+*/
 serversocket::~serversocket()
 {
     close();
@@ -40,11 +45,11 @@ int serversocket::listen()
     return 0;
 }
 
-tcpsocket* serversocket::accept()
+clientsocket* serversocket::accept()
 {
     struct sockaddr_in from;
     socklen_t l = sizeof(from);
     int clientfd = ::accept(sock_fd, (struct sockaddr*)&from, &l);
 
-    return new tcpsocket(clientfd, from);
+    return new clientsocket(clientfd, from);
 }

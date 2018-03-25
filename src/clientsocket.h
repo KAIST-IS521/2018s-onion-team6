@@ -7,33 +7,27 @@
 #include <string>
 #include <unistd.h>
 #include <cerrno>
+#include <string>
+#include <fcntl.h>
 
 #include "socketaddress.h"
 
-
-class tcpsocket
+class clientsocket
 {
-	protected:
-		int sock_fd;
-		struct sockaddr_in address;
-		socketaddress* sockaddr;
+    protected:
+        int sock_fd;
+        struct sockaddr_in address;
+        socketaddress* sockaddr;
 
-	public:
-		tcpsocket() {}
-		tcpsocket(int socket, struct sockaddr_in addr)
-		{
-			sock_fd = socket;
-			address = addr;
-			sockaddr = new socketaddress(addr);
-		}
-		~tcpsocket();
+    public:
+        clientsocket();
+        clientsocket(int socket, struct sockaddr_in addr);
+        ~clientsocket();
 
 		int send(std::string);
 		int send(const char*, int, int);
-
 		int read(std::string&);
 		int read(char*, int);
-		
 		void set_blocking();
 		void set_nonblocking();
 		void close()

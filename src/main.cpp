@@ -2,6 +2,7 @@
 #include "onion_messenger.h"
 #include "user_info.h"
 
+
 using namespace std;
 
 UserInfo * myInfo;
