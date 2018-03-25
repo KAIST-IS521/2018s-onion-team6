@@ -5,7 +5,7 @@
 #include<list>
 
 #include "user_info.h"
-
+#include "msgserver.h"
 using namespace std;
 
 extern UserInfo* myInfo;

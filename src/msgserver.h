@@ -15,6 +15,7 @@ public:
     MsgServer();
     ~MsgServer();
     void RecvServer();
+    int MsgClient(string ip, string msg);
     void Start();
     void Worker(ClientSocket* client_sock);
 

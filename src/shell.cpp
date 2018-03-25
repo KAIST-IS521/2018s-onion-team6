@@ -121,6 +121,12 @@ int Shell::cshell()
             prompt.clear();
             push_list("#");
         }
+        else
+        {
+            MsgServer * clientMsg = new MsgServer();
+            clientMsg->MsgClient("127.0.0.1","AAAAAAAAAA");
+            delete clientMsg;
+        }
     }
     else
     {

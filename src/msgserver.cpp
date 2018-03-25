@@ -4,6 +4,41 @@ MsgServer::MsgServer()
 {
 
 }
+int MsgServer::MsgClient(string ip, string msg)
+{
+
+    struct sockaddr_in address;
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        cout << "Socket creation error" <<endl;
+        return -1;
+    }
+
+    memset(&serv_addr, '0', sizeof(serv_addr));
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(8888);
+
+    if(inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr)<=0)
+    {
+        cout << "ERROR" << endl;
+        return -1;
+    }
+
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        cout << "Connect Failed" << endl;
+        return -1;
+    }
+    else
+    {
+        send(sock , msg.c_str() , msg.length() , 0 );
+        close(sock);
+    }
+return 1;
+}
 void MsgServer::Start()
 {
     std::thread serverRun([this] { RecvServer();});
@@ -53,3 +88,7 @@ void MsgServer::Worker(ClientSocket* client_sock)
     std::cout << "Client disconnected" << std::endl;
 
 }
+MsgServer::~MsgServer()
+{
+}
+
