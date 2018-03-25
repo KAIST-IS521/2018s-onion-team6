@@ -1,5 +1,5 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef CLIENT_SOCKET_H
+#define CLIENT_SOCKET_H
 
 #include <sys/socket.h>
 #include <sys/types.h>
