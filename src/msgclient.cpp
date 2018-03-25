@@ -70,8 +70,8 @@ int MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    //this->send_sock->Connect(this->node_list.front());
-    this->send_sock->Connect("127.0.0.1");
+    this->send_sock->Connect(this->node_list[0]);
+    //this->send_sock->Connect("127.0.0.1");
     SendLength();
     SendData();
 }
