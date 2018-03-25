@@ -1,7 +1,8 @@
 #!/bin/sh
-NAME="onion"
+CONTAINER_NAME=$1
+IMAGE_NAME=onion
 
-PORT="-p 20000:22"
+PORT="-p 20002:22"
 
 SHARED=
 
@@ -10,5 +11,5 @@ SHARED=
 
 OPTION="--rm"
 
-sudo docker run --name $NAME $PORT -i -t -d $SHRED $OPTION $NAME:1.0 /bin/sh
+sudo docker run --name $CONTAINER_NAME $PORT -i -t -d $SHRED $OPTION $IMAGE_NAME:1.0 /bin/sh
 
