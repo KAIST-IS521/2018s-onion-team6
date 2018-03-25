@@ -21,7 +21,7 @@ SS="serversocket"
 SA="socketaddress"
 TA="clientsocket"
 MS="msgserver"
-
+MC="msgclient"
 default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(O).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(P).cpp $(JSON_OPTION)
@@ -33,9 +33,9 @@ default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(SA).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(TA).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(MS).cpp $(JSON_OPTION)
+	$(CC) $(OBJ_OPT) -c $(SRC)$(MC).cpp $(JSON_OPTION)
 
-
-	$(CC) $(OPTION) -o ./CLIENT/onion src/main.cpp $(H).o $(O).o $(P).o $(C).o $(S).o $(U).o $(SRC)$(J).cpp $(SS).o $(SA).o $(TA).o $(MS).o  $(JSON_OPTION)
+	$(CC) $(OPTION) -o ./CLIENT/onion src/main.cpp $(H).o $(O).o $(P).o $(C).o $(S).o $(U).o $(SRC)$(J).cpp $(SS).o $(SA).o $(TA).o $(MS).o $(MC).o  $(JSON_OPTION)
 
 
 clean:
