@@ -10,9 +10,9 @@ OnionMessenger::OnionMessenger()
 
 void OnionMessenger::StartApp()
 {
-    Shell *sha = new Shell();
-    // Check passphrase
+    Shell *shell = new Shell();
+    PGP *pgp = new PGP(shell->GetPass());
     Heartbeat *heartbeat = new Heartbeat();
     heartbeat->Start();
-    sha->run();
+    shell->run();
 }

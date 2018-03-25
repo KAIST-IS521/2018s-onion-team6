@@ -7,6 +7,7 @@
 #include "user_info.h"
 #include "shell.h"
 #include "heartbeat.h"
+#include "pgp.h"
 
 using namespace std;
 
