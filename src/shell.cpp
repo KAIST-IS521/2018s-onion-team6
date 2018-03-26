@@ -3,25 +3,47 @@
 #include <cstdlib>
 #include <fstream>
 
-using namespace std;
-
-Shell::Shell(const string id, const string pw)
+Shell::Shell()
 {
-    private_id = id;
-    private_pw = pw;
-    push_list("#");
-
+    login();
+}
+void Shell::run()
+{
+    push_list(" # ");
+    usage();
     while(1) cshell();
 
 }
+void Shell::login()
+{
+    string s_id;
+    string s_pw;
+    cout << this->banner <<endl;
+
+    cout << "[+] GIT_ID > ";
+    cin >>s_id;
+    cout << "[+] Private key password > ";
+    cin >>s_pw;
+    cout << endl;
+
+    private_id = s_id;
+    private_pw = s_pw;
+    myInfo->SetGithubId(s_id);
+
+}
+string Shell::GetPass()
+{
+    return private_pw;
+}
 void Shell::usage()
 {
-    cout << "USAGE :#[COMMAND]" << endl;
+    cout << "USAGE :# [COMMAND]" << endl;
     cout << "         {help}                        : print usage"<< endl;
     cout << "         {send} {GIT_ID}               : send message" << endl;
     cout << "                          -> {MESSAGE} : input message" <<endl;
     cout << "         {ls}                          : show received message list " << endl;
     cout << "         {cat} {GIT_ID}                : print recvived message" << endl;
+    cout << "         {w}                           : show member list" << endl;
     cout << "         {exit}                        : program exit" << endl;
     cout << endl;
 }
@@ -48,7 +70,14 @@ void Shell::pop_list()
     if(!prompt.empty())
         prompt.pop_back();
 }
-
+void Shell::printMember()
+{
+    cout  << "::::::::::   ONLINE MEMBER LIST   :::::::::::"<< endl;
+    for (std::pair<std::string, UserInfo * > element : UserInfoMap )
+    {
+        cout << "[+] "<< element.first << endl;
+    }
+}
 int Shell::cshell()
 {
     printPrompt();
@@ -61,7 +90,7 @@ int Shell::cshell()
 */
     setbuf(stdin,NULL);
     setbuf(stdout,NULL);
-    if(!shell.substr(0,1).compare("#"))
+    if(!shell.substr(0,3).compare(" # "))
     {
         string cmd;
         getline(cin,cmd);
@@ -83,10 +112,17 @@ int Shell::cshell()
         {
             exit(0);
         }
+        else if (!cmd.substr(0,1).compare("w"))
+        {
+            printMember();
+        }
         else if ( !cmd.substr(0,4).compare("send") )
         {
             if(cmd.size()>5)
-                send(cmd.substr(5,250));
+            {
+                this->receiver = cmd.substr(5,250);
+                send(this->receiver);
+            }
         }
         else
         {
@@ -101,13 +137,21 @@ int Shell::cshell()
         if(msg.size() <1)
         {
             prompt.clear();
-            push_list("#");
+            push_list("\n # ");
+        }
+        else
+        {
+            MsgClient *msg_client = new MsgClient(this->receiver, msg);
+            msg_client->Start();
+            //MsgServer * clientMsg = new MsgServer();
+            //clientMsg->MsgClient("127.0.0.1","AAAAAAAAAA");
+            //delete clientMsg;
         }
     }
     else
     {
         prompt.clear();
-        push_list("#");
+        push_list("\n # ");
     }
 
     return 1;

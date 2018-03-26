@@ -1,29 +1,25 @@
 #include "onion_messenger.h"
 
-using namespace std;
+UserInfo* myInfo;
+unordered_map<string, UserInfo*> UserInfoMap;
+
 OnionMessenger::OnionMessenger()
 {
-
+    myInfo = new UserInfo();
 }
 
 void OnionMessenger::StartApp()
 {
-    string id;
-    string pw;
+    Shell *shell = new Shell();
+    //PGP *pgp = new PGP(shell->GetPass());
 
-    cout << "INPUT ID > ";
-    cin >> id;
 
-    cout << "INPUT Pass > ";
-    cin >> pw;
+    MsgServer * msgserver = new MsgServer();
+    msgserver->Start();
 
-    // Shell *sha = new Shell(id,pw);
     Heartbeat *heartbeat = new Heartbeat();
     heartbeat->Start();
 
-    // login
-    // init
-    // broadcast
-    // pgp private key import
-    // shell prompt
+
+    shell->run();
 }

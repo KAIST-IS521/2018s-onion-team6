@@ -14,38 +14,41 @@ using namespace std;
 
 class Socket
 {
-public:
-    Socket();
-    ~Socket();
+    public:
+        Socket();
+        ~Socket();
 
-    int SetSockOpt(int level, int optname, const void *optval, socklen_t optlen);
-    int Bind(int port);
+        int SetSockOpt(int level, int optname, const void *optval, socklen_t optlen);
+        int Bind(int port);
+        int Connect(string ip_addr);
 
-protected:
-    int sd;
+    protected:
+        int sd;
 };
 
 class UDPSocket : public Socket
 {
-public:
-    UDPSocket();
-    virtual ~UDPSocket();
+    public:
+        UDPSocket();
+        virtual ~UDPSocket();
 
-    void SetDestAddr(char* dest_addr, int port);
-    int Send(char* data, size_t len);
-    int Recv(size_t len);
-private:
-    struct sockaddr_in _recvaddr;
+        void SetDestAddr(const char* dest_addr, int port);
+        int Send(string data);
+        string* Recv();
+
+    private:
+        struct sockaddr_in recvaddr;
 };
 
 class TCPSocket : public Socket
 {
-public:
-    TCPSocket();
-    virtual ~TCPSocket();
+    public:
+        TCPSocket();
+        virtual ~TCPSocket();
 
-    int Send(char* data, size_t len);
-    int Recv(size_t len);
+        //int Send(char* data, size_t len);
+        int Send(string data);
+        int Recv(size_t len);
 };
 
 #endif // SOCKET_H

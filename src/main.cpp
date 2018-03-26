@@ -1,7 +1,8 @@
-#include<iostream> 
+#include<iostream>
 #include "onion_messenger.h"
 
 using namespace std;
+
 int main(int argc, char *argv[])
 {
     cout << "[D] TEST START MAIN "<< endl;
