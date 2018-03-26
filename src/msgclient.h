@@ -21,24 +21,25 @@ extern unordered_map<string, UserInfo*> UserInfoMap;
 
 class MsgClient
 {
-private:
-    string receiver;
-    string msg;
-    TCPSocket* send_sock;
-    array <string,100> node_list;
+    public:
+        MsgClient(string receiver, string msg);
+        ~MsgClient();
+        void Start();
 
-public:
-    MsgClient(string receiver, string msg);
-    ~MsgClient();
-    void Start();
-    bool CheckReceiver();
-    bool SetRoute();
+    private:
+        string receiver;
+        string msg;
+        TCPSocket* send_sock;
+        array <string,100> node_list;
 
-    int SendMsg();
-    int SendLength();
-    int SendData();
+        bool CheckReceiver();
+        bool SetRoute();
 
-    int EncryptMsg(string data);
+        int SendMsg();
+        int SendLength();
+        int SendData();
+
+        int EncryptMsg(string data);
 };
 
 #endif // MESSAGECLIENT_H

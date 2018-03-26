@@ -5,42 +5,41 @@
 
 Shell::Shell()
 {
-    login();
+    Login();
 }
-void Shell::run()
+
+void Shell::Run()
 {
     push_list(" # ");
     usage();
-    while(1) cshell();
-
+    while(1) CShell();
 }
-void Shell::login()
+
+void Shell::Login()
 {
     string s_id;
     string s_pw;
-    cout << this->banner <<endl;
+
+    cout << this->banner << endl;
 
     cout << "[+] GIT_ID > ";
-    cin >>s_id;
+    cin >> s_id;
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     cout << "[+] Private key password > ";
-    cin >>s_pw;
-    cout << endl;
+    s_pw = GetPassword();
 
     private_id = s_id;
     private_pw = s_pw;
     myInfo->SetGithubId(s_id);
+}
 
-}
-string Shell::GetPass()
-{
-    return private_pw;
-}
 void Shell::usage()
 {
     cout << "USAGE :# [COMMAND]" << endl;
-    cout << "         {help}                        : print usage"<< endl;
+    cout << "         {help}                        : print usage" << endl;
     cout << "         {send} {GIT_ID}               : send message" << endl;
-    cout << "                          -> {MESSAGE} : input message" <<endl;
+    cout << "                          -> {MESSAGE} : input message" << endl;
     cout << "         {ls}                          : show received message list " << endl;
     cout << "         {cat} {GIT_ID}                : print recvived message" << endl;
     cout << "         {w}                           : show member list" << endl;
@@ -48,12 +47,12 @@ void Shell::usage()
     cout << endl;
 }
 
-int Shell::printPrompt()
+int Shell::PrintPrompt()
 {
     if(!prompt.empty())
     {
         list <string>::iterator itor;
-        for(itor = prompt.begin(); itor!= prompt.end();itor++)
+        for(itor=prompt.begin(); itor!=prompt.end(); itor++)
             cout << *itor;
     }
     return 0;
@@ -70,45 +69,48 @@ void Shell::pop_list()
     if(!prompt.empty())
         prompt.pop_back();
 }
+
 void Shell::printMember()
 {
-    cout  << "::::::::::   ONLINE MEMBER LIST   :::::::::::"<< endl;
-    for (std::pair<std::string, UserInfo * > element : UserInfoMap )
-    {
-        cout << "[+] "<< element.first << endl;
-    }
+    cout << "::::::::::   ONLINE MEMBER LIST   :::::::::::" << endl;
+    for(std::pair<std::string, UserInfo*> element : UserInfoMap )
+        cout << "[+] " << element.first << endl;
 }
-int Shell::cshell()
+
+int Shell::CShell()
 {
-    printPrompt();
+    PrintPrompt();
+    ParseCmd();
+    return 1;
+}
+
+int Shell::ParseCmd()
+{
     list<string>::iterator iter = prompt.end();
     string shell=(*--iter);
-/*
-    cout << "--------------" <<endl;
-    cout << shell  << endl;
-    cout << "--------------" <<endl;
-*/
-    setbuf(stdin,NULL);
-    setbuf(stdout,NULL);
+
+    setbuf(stdin, NULL);
+    setbuf(stdout, NULL);
+
     if(!shell.substr(0,3).compare(" # "))
     {
         string cmd;
-        getline(cin,cmd);
+        getline(cin, cmd);
 
-        if( !cmd.substr(0,4).compare("help") || !cmd.substr(0,1).compare("?") )
+        if(!cmd.substr(0,4).compare("help") || !cmd.substr(0,1).compare("?"))
         {
             usage();
         }
-        else if( !cmd.substr(0,2).compare("ls") )
+        else if(!cmd.substr(0,2).compare("ls"))
         {
             ls();
         }
-        else if ( !cmd.substr(0,3).compare("cat"))
+        else if (!cmd.substr(0,3).compare("cat"))
         {
-            if(cmd.size()>4)
+            if(cmd.size() > 4)
                 cat(cmd.substr(4,250)); //max path size is 255
         }
-        else if ( !cmd.substr(0,4).compare("exit") )
+        else if (!cmd.substr(0,4).compare("exit"))
         {
             exit(0);
         }
@@ -116,7 +118,7 @@ int Shell::cshell()
         {
             printMember();
         }
-        else if ( !cmd.substr(0,4).compare("send") )
+        else if (!cmd.substr(0,4).compare("send"))
         {
             if(cmd.size()>5)
             {
@@ -137,25 +139,25 @@ int Shell::cshell()
         if(msg.size() <1)
         {
             prompt.clear();
-            push_list("\n # ");
+            push_list(" # ");
+            cout << endl;
+            delete msg_client;
         }
         else
         {
-            MsgClient *msg_client = new MsgClient(this->receiver, msg);
+            msg_client = new MsgClient(this->receiver, msg);
             msg_client->Start();
-            //MsgServer * clientMsg = new MsgServer();
-            //clientMsg->MsgClient("127.0.0.1","AAAAAAAAAA");
-            //delete clientMsg;
         }
     }
     else
     {
         prompt.clear();
-        push_list("\n # ");
+        push_list(" # ");
+        cout <<endl;
     }
-
-    return 1;
+    return 0;
 }
+
 int Shell::cat(const string gitId)
 {
     string fileName=gitId;
@@ -186,18 +188,61 @@ int Shell::cat(const string gitId)
 
     return 0;
 }
+
 int Shell::ls()
 {
     cout << "[D] shell::ls() "<< endl;
     return 0;
 }
+
 int Shell::send(const string gitId)
 {
-    // [!] Verify gitId list
-    //if( SERCH LIST( gitId )) {}
     prompt.push_back("send @ <"+gitId+"> : ");
-
-    // SEND SOCKET MESAGE
-
     return 0;
+}
+
+int Shell::GetCh() {
+    int ch;
+    struct termios t_old, t_new;
+
+    tcgetattr(STDIN_FILENO, &t_old);
+    t_new = t_old;
+    t_new.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &t_new);
+
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &t_old);
+    return ch;
+}
+
+string Shell::GetPassword()
+{
+    const char BACKSPACE = 127;
+    const char RETURN = 10;
+    string password;
+    unsigned char ch = 0;
+
+    while((ch=GetCh()) != RETURN)
+    {
+        if(ch == BACKSPACE)
+        {
+            if(password.length() != 0)
+            {
+                 cout << "\b \b";
+                 password.resize(password.length()-1);
+            }
+        }
+        else
+        {
+            password += ch;
+            cout <<'*';
+        }
+    }
+    cout << endl;
+    return password;
+}
+
+string Shell::GetPass()
+{
+    return private_pw;
 }
