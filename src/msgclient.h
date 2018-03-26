@@ -29,6 +29,7 @@ private:
 
 public:
     MsgClient(string receiver, string msg);
+    ~MsgClient();
     void Start();
     bool CheckReceiver();
     int SendMsg();
