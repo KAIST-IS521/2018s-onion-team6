@@ -9,7 +9,7 @@ Shell::Shell()
 }
 void Shell::run()
 {
-    push_list(" #");
+    push_list(" # ");
     usage();
     while(1) cshell();
 
@@ -43,6 +43,7 @@ void Shell::usage()
     cout << "                          -> {MESSAGE} : input message" <<endl;
     cout << "         {ls}                          : show received message list " << endl;
     cout << "         {cat} {GIT_ID}                : print recvived message" << endl;
+    cout << "         {w}                           : show member list" << endl;
     cout << "         {exit}                        : program exit" << endl;
     cout << endl;
 }
@@ -69,7 +70,14 @@ void Shell::pop_list()
     if(!prompt.empty())
         prompt.pop_back();
 }
-
+void Shell::printMember()
+{
+    cout  << "::::::::::   ONLINE MEMBER LIST   :::::::::::"<< endl;
+    for (std::pair<std::string, UserInfo * > element : UserInfoMap )
+    {
+        cout << "[+] "<< element.first << endl;
+    }
+}
 int Shell::cshell()
 {
     printPrompt();
@@ -82,7 +90,7 @@ int Shell::cshell()
 */
     setbuf(stdin,NULL);
     setbuf(stdout,NULL);
-    if(!shell.substr(0,1).compare("#"))
+    if(!shell.substr(0,3).compare(" # "))
     {
         string cmd;
         getline(cin,cmd);
@@ -103,6 +111,10 @@ int Shell::cshell()
         else if ( !cmd.substr(0,4).compare("exit") )
         {
             exit(0);
+        }
+        else if (!cmd.substr(0,1).compare("w"))
+        {
+            printMember();
         }
         else if ( !cmd.substr(0,4).compare("send") )
         {
@@ -125,7 +137,7 @@ int Shell::cshell()
         if(msg.size() <1)
         {
             prompt.clear();
-            push_list(" #");
+            push_list("\n # ");
         }
         else
         {
@@ -139,7 +151,7 @@ int Shell::cshell()
     else
     {
         prompt.clear();
-        push_list("#");
+        push_list("\n # ");
     }
 
     return 1;
