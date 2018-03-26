@@ -139,7 +139,8 @@ int Shell::ParseCmd()
         if(msg.size() <1)
         {
             prompt.clear();
-            push_list("\n # ");
+            push_list(" # ");
+            cout << endl;
             delete msg_client;
         }
         else
@@ -151,7 +152,8 @@ int Shell::ParseCmd()
     else
     {
         prompt.clear();
-        push_list("\n # ");
+        push_list(" # ");
+        cout <<endl;
     }
     return 0;
 }
