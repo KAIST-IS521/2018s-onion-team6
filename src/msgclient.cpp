@@ -41,7 +41,7 @@ bool MsgClient::SetRoute()
 {
     int i, j= 0;
     int maxsize = UserInfoMap.size();
-    if(maxsize > 2 && maxsize < 100)
+    if(maxsize > 1 && maxsize < 100)
     {
         for(i = 0; i < maxsize; i++)
             node_list[i]="";

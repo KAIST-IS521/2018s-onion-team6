@@ -70,36 +70,68 @@ void MsgServer::RecvServer()
 
     delete p_server_sock;
 }
-int MsgServer::PGPDecrpyt(string msg)
+
+int MsgServer::JsonParsor(string msg)
+{
+        string * data = new string(msg);
+        JSONCPP_STRING errs;
+        Json::Value root;
+        Json::CharReaderBuilder builder;
+        Json::CharReader * reader = builder.newCharReader();
+        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+
+
+        //get json data
+        Json::Value j_sender    = root["sender"];
+        Json::Value j_receiver  = root["receiver"];
+        Json::Value j_length    = root["length"];
+        Json::Value j_data      = root["data"];
+
+        //cast json data
+        string github_id    = j_sender.asCString();
+        string receiver_id  = j_receiver.asCString();
+        string pgp_data     = j_data.asCString();
+        int data_len        = 0;
+        data_len            = j_data.asInt();
+
+        if(data_len != 0)
+        {
+            return 0;
+        }
+        else
+        {
+            // MY MESSAGE
+            if(receiver_id == myInfo->GetGithubId())
+            {
+                cout << "[!] Message arrived" << endl;
+                cout << this->PGPDecrypt(pgp_data) << endl;
+            }
+            // NOT MY MESSAGE
+            else
+            {
+                string nextIp = UserInfoMap[github_id]->GetIpAddr();
+                this->MsgClient(nextIp,pgp_data);
+
+                return 1;
+            }
+        }
+    delete data;
+    data = NULL;
+    return 0;
+
+}
+string MsgServer::PGPDecrypt(string msg)
 {
     //try PGP decrypt
 
-    string decryptedMsg;// = decrypted_pgp_function;
-
-    if (1) // decrppt_pgp_function ) try catch
+    string decryptedMsg="";// = decrypted_pgp_function;
+    //try decrpyt
+    if (1==1) // decrypt success -> try catch
     {
-
+        decryptedMsg=msg;
     }
-    else //success decrpyt -> it's means no error ..
-    {
-        if(1) //exist next node
-        {
-            string github_id=""; // = nextNode;
-            string nextip="";
-            nextip = UserInfoMap[github_id]->GetIpAddr();
-            //"Create Client socket";
-            //socket(nextip,cypher_msg);
-            //close socket
-        }
-        else // my msg
-        {
-            cout << "plain message" << endl;
-        }
-    }
-    return 1;
+    return decryptedMsg;
 }
-//
-//
 //  UserInfo* myInfo;
 //  4 unordered_map<string, UserInfo*> UserInfoMap;
 //
@@ -115,7 +147,12 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             break;
         }
-        std::cout << msg;
+        string decryptedMsg = this->PGPDecrypt(msg);
+        if(decryptedMsg!="")
+        {
+            this->JsonParsor(decryptedMsg);
+        }
+        std::cout << "[D]"<<msg;
     }
     delete client_sock;
     std::cout << "Client disconnected" << std::endl;
