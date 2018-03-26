@@ -67,12 +67,7 @@ void Heartbeat::SendBroadcast()
         root["github_id"] = myInfo->GetGithubId();
         root["pgp_key_id"] = myInfo->GetPGPKeyId();
 
-        // json data to string
-        Json::StyledWriter writer;
-        std::string information = writer.write( root );
-
-        // send data
-        rv = this->send_sock->Send(information);
+        rv = this->send_sock->Send(root.toStyledString());
         if (rv > 0)
 #ifdef HEARTBEAT_LOG
           cout << "Send Broadcast" << endl;
@@ -99,10 +94,11 @@ void Heartbeat::RecvBroadcast()
         cout << "Recv Broadcast" << endl;
 #endif
         // parse data to json format
+        JSONCPP_STRING errs;
         Json::Value root;
-        Json::Reader reader;
-        if(!reader.parse(data[0], root))
-            cout << "Parse error" << endl;
+        Json::CharReaderBuilder builder;
+        Json::CharReader * reader = builder.newCharReader();
+        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
 
         // get json data
         Json::Value j_flag = root["flag"];
