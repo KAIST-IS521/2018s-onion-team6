@@ -41,8 +41,8 @@ int MsgClient::SetRoute()
         {
             node_list[i]="";
         }
-        i=0;
 
+        i=0;
         for (std::pair<std::string, UserInfo * > element : UserInfoMap )
         {
             node_list[i]=element.first;
@@ -75,9 +75,9 @@ int MsgClient::SendMsg()
 #ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
-    //this->send_sock->Connect("127.0.0.1");
     SendLength();
     SendData();
+    return 0;
 }
 
 int MsgClient::SendLength()
@@ -86,13 +86,8 @@ int MsgClient::SendLength()
     root["sender"] = myInfo->GetGithubId();
     root["receiver"] = this->receiver;
     root["length"] = this->msg.length();
-
-    Json::StyledWriter writer;
-    std::string data = writer.write( root );
-
-    EncryptMsg(data);
-    this->send_sock->Send(data);
-
+    this->send_sock->Send(root.toStyledString());
+    return 0;
 }
 
 int MsgClient::SendData()
@@ -101,15 +96,16 @@ int MsgClient::SendData()
     root["sender"] = myInfo->GetGithubId();
     root["receiver"] = this->receiver;
     root["data"] = this->msg;
-
-    Json::StyledWriter writer;
-    std::string data = writer.write( root );
-
-    EncryptMsg(data);
-    this->send_sock->Send(data);
+    this->send_sock->Send(root.toStyledString());
+    return 0;
 }
 
 int MsgClient::EncryptMsg(string data)
 {
 	return 0;
+}
+
+MsgClient::~MsgClient()
+{
+
 }

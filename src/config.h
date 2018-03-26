@@ -2,7 +2,8 @@
 #define CONFIG_H
 
 //#define HEARTBEAT_LOG
-#define MSGCLIENT_LOG
+//#define MSGCLIENT_LOG
+//#define SOCKET_LOG
 
 #define BROADCAST_PERIOD 1
 #define HEARTBEAT_SEND_PORT 7777
