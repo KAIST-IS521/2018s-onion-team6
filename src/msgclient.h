@@ -36,7 +36,6 @@ class MsgClient
         bool SetRoute();
 
         int SendMsg();
-        int SendLength();
         int SendData();
 
         int EncryptMsg(string data);

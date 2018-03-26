@@ -12,6 +12,9 @@
 #include "clientsocket.h"
 #include "user_info.h"
 
+#include "json/json.h"
+
+
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
 
@@ -27,10 +30,11 @@ private:
     ClientSocket * p_client_sock;
     ServerSocket * p_server_sock;
 
+    int JsonParsor(string msg);
     void RecvServer();
     int MsgClient(string ip, string msg);
     void Worker(ClientSocket* client_sock);
-    int PGPDecrpyt(string msg);
+    string PGPDecrypt(string msg);
 };
 
 #endif // MSGSERVER_H

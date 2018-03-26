@@ -41,28 +41,50 @@ bool MsgClient::SetRoute()
 {
     int i, j= 0;
     int maxsize = UserInfoMap.size();
-    if(maxsize > 2 && maxsize < 100)
+    string myGitId = myInfo->GetGithubId();
+
+    if(maxsize > 1 && maxsize < 100)
     {
         for(i = 0; i < maxsize; i++)
+        {
             node_list[i]="";
+        }
 
         i = 0;
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
         {
-            node_list[i]=element.first;
-            i++;
+            if(element.first != this->receiver && element.first != myGitId)
+            {
+                node_list[i]=element.first;
+                i++;
+            }
         }
+
         j = 0;
         srand(time(NULL));
-        for(i = maxsize-1 ; i > 0; i--)
+
+        for(i = 0; i < maxsize-2; i++)
         {
-            j = rand() % i;
-            std::swap(node_list[i], node_list[j]);
+            cout << "[D1]_node list "<<node_list[i] << endl;
         }
-#ifdef MSGCLIENT_LOG
-        for(i = 0; i < maxsize; i++)
-            cout << "[D]"<<node_list[i] <<endl;
-#endif
+
+        // list -=  myid -= receive id;
+        if(maxsize > 2)
+        {
+            for(i = maxsize-3; i > 0; i--)
+            {
+                j = rand() % i;
+                std::swap(node_list[i], node_list[j]);
+            }
+        }
+
+        node_list[maxsize-2] = this->receiver;
+//#ifdef MSGCLIENT_LOG
+        for(i = 0; i < maxsize-1; i++)
+        {
+            cout << "[D2]_node list "<<node_list[i] << endl;
+        }
+//#endif
     }
     else
     {
@@ -74,26 +96,14 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    int rv = 0;
     string recv_ip = ((UserInfo*)(UserInfoMap[this->node_list[0]]))->GetIpAddr();
     this->send_sock->Connect(recv_ip);
+
 #ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
-    rv += SendLength();
-    rv += SendData();
-    return rv;
-}
 
-int MsgClient::SendLength()
-{
-    int rv = 0;
-    Json::Value root;
-    root["sender"] = myInfo->GetGithubId();
-    root["receiver"] = this->receiver;
-    root["length"] = this->msg.length();
-    rv = this->send_sock->Send(root.toStyledString());
-    return rv;
+    return SendData();
 }
 
 int MsgClient::SendData()
