@@ -20,15 +20,17 @@ class MsgServer
 public:
     MsgServer();
     ~MsgServer();
-    void RecvServer();
-    int MsgClient(string ip, string msg);
+
     void Start();
-    void Worker(ClientSocket* client_sock);
-    int PGPDecrpyt(string msg);
 
 private:
     ClientSocket * p_client_sock;
     ServerSocket * p_server_sock;
+
+    void RecvServer();
+    int MsgClient(string ip, string msg);
+    void Worker(ClientSocket* client_sock);
+    int PGPDecrpyt(string msg);
 };
 
 #endif // MSGSERVER_H

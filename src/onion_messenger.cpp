@@ -13,13 +13,11 @@ void OnionMessenger::StartApp()
     Shell *shell = new Shell();
     //PGP *pgp = new PGP(shell->GetPass());
 
-
     MsgServer * msgserver = new MsgServer();
     msgserver->Start();
 
     Heartbeat *heartbeat = new Heartbeat();
     heartbeat->Start();
 
-
-    shell->run();
+    shell->Run();
 }
