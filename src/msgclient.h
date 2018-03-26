@@ -32,12 +32,13 @@ public:
     ~MsgClient();
     void Start();
     bool CheckReceiver();
+    bool SetRoute();
+
     int SendMsg();
     int SendLength();
     int SendData();
+
     int EncryptMsg(string data);
-    int SetRoute();
-    int SendMessage();
 };
 
 #endif // MESSAGECLIENT_H
