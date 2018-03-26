@@ -74,6 +74,7 @@ void MsgServer::RecvServer()
 int MsgServer::JsonParsor(string msg)
 {
         string * data = new string(msg);
+/*
         JSONCPP_STRING errs;
         Json::Value root;
         Json::CharReaderBuilder builder;
@@ -115,6 +116,7 @@ int MsgServer::JsonParsor(string msg)
                 return 1;
             }
         }
+*/
     delete data;
     data = NULL;
     return 0;
