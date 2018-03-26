@@ -6,11 +6,12 @@
 #include <cstring>
 #include <thread>
 #include <unordered_map>
+
 #include "config.h"
 #include "serversocket.h"
 #include "clientsocket.h"
-
 #include "user_info.h"
+
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
 
