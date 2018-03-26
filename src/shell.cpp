@@ -9,7 +9,8 @@ Shell::Shell()
 }
 void Shell::run()
 {
-    push_list("#");
+    push_list(" #");
+    usage();
     while(1) cshell();
 
 }
@@ -17,12 +18,14 @@ void Shell::login()
 {
     string s_id;
     string s_pw;
+    cout << this->banner <<endl;
 
-
-    cout << "GIT_ID > ";
+    cout << "[+] GIT_ID > ";
     cin >>s_id;
-    cout << "PASS > ";
+    cout << "[+] Private key password > ";
     cin >>s_pw;
+    cout << endl;
+
     private_id = s_id;
     private_pw = s_pw;
     myInfo->SetGithubId(s_id);
@@ -34,7 +37,7 @@ string Shell::GetPass()
 }
 void Shell::usage()
 {
-    cout << "USAGE :#[COMMAND]" << endl;
+    cout << "USAGE :# [COMMAND]" << endl;
     cout << "         {help}                        : print usage"<< endl;
     cout << "         {send} {GIT_ID}               : send message" << endl;
     cout << "                          -> {MESSAGE} : input message" <<endl;
@@ -122,7 +125,7 @@ int Shell::cshell()
         if(msg.size() <1)
         {
             prompt.clear();
-            push_list("#");
+            push_list(" #");
         }
         else
         {
