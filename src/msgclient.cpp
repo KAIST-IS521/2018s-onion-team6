@@ -99,7 +99,7 @@ int MsgClient::SendMsg()
 #ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
-    rv += SendLength();
+    //rv += SendLength();
     rv += SendData();
     return rv;
 }

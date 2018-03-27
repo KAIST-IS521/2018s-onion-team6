@@ -42,8 +42,9 @@ return 1;
 }
 void MsgServer::Start()
 {
-    std::thread serverRun([this] { RecvServer();});
-    serverRun.detach();
+   // this->JsonParsor("1");
+   std::thread serverRun([this] { RecvServer();});
+   serverRun.detach();
 }
 void MsgServer::RecvServer()
 {
@@ -74,49 +75,40 @@ void MsgServer::RecvServer()
 int MsgServer::JsonParsor(string msg)
 {
         string * data = new string(msg);
-/*
+
         JSONCPP_STRING errs;
         Json::Value root;
         Json::CharReaderBuilder builder;
         Json::CharReader * reader = builder.newCharReader();
         reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
 
-
+        cout << msg <<endl;
         //get json data
+
         Json::Value j_sender    = root["sender"];
         Json::Value j_receiver  = root["receiver"];
-        Json::Value j_length    = root["length"];
         Json::Value j_data      = root["data"];
 
         //cast json data
         string github_id    = j_sender.asCString();
         string receiver_id  = j_receiver.asCString();
         string pgp_data     = j_data.asCString();
-        int data_len        = 0;
-        data_len            = j_data.asInt();
 
-        if(data_len != 0)
+            // MY MESSAGE
+        if(receiver_id == myInfo->GetGithubId())
         {
-            return 0;
+            cout << "[!] Message arrived" << endl;
+            cout << this->PGPDecrypt(pgp_data) << endl;
         }
+            // NOT MY MESSAGE
         else
         {
-            // MY MESSAGE
-            if(receiver_id == myInfo->GetGithubId())
-            {
-                cout << "[!] Message arrived" << endl;
-                cout << this->PGPDecrypt(pgp_data) << endl;
-            }
-            // NOT MY MESSAGE
-            else
-            {
-                string nextIp = UserInfoMap[github_id]->GetIpAddr();
-                this->MsgClient(nextIp,pgp_data);
-
-                return 1;
-            }
+            string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
+            cout << "[D]JsonParsor : pgp_data" << pgp_data <<endl; 
+            this->MsgClient(nextIp,pgp_data);
+            return 1;
         }
-*/
+
     delete data;
     data = NULL;
     return 0;
