@@ -101,10 +101,6 @@ int MsgClient::SendMsg()
 #ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
-    rv += SendData();
-    return rv;
-}
-
     return SendData();
 }
 

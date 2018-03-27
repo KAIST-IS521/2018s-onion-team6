@@ -1,8 +1,10 @@
 #CC=gcc
 RM=rm
 CC=clang++-5.0
+MK=mkdir
 #CC=g++
 OBJ_OPT=-v -std=c++11
+
 
 SRC=src/
 
