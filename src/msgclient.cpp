@@ -127,9 +127,15 @@ string MsgClient::EncryptMsg(string data)
     for(int i = this->route_length; i>0 ; i--)
     {
         string receiver = this->node_list[i-1];
+        string sender = "";
+        if (i==1)
+            sender = myInfo->GetGithubId();
+        else
+            sender = this->node_list[i-2];
         //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
 
         Json::Value root;
+        root["sender"] = sender;
         root["receiver"] = receiver;
         root["data"] = data;
         data = root.toStyledString();
