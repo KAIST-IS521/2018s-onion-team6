@@ -37,50 +37,52 @@ bool MsgClient::CheckReceiver()
         return false;
     return true;
 }
+
 bool MsgClient::SetRoute()
 {
     int i, j= 0;
+
     int maxsize = UserInfoMap.size();
-    string myGitId = myInfo->GetGithubId();
-    if(maxsize > 1 && maxsize < 100)
+    string my_github_id = myInfo->GetGithubId();
+
+    if(maxsize > 2 && maxsize < 100)
     {
+        // initialize
         for(i = 0; i < maxsize; i++)
-        {
             node_list[i]="";
-        }
+
         i = 0;
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
         {
-            if(element.first != this->receiver && element.first != myGitId)
+            // except for sender, receiver
+            if(element.first != this->receiver && element.first != my_github_id)
             {
                 node_list[i]=element.first;
                 i++;
             }
         }
-        j = 0;
+
         srand(time(NULL));
 
-        for(i = 0; i < maxsize-1; i++)
-        {
+//#ifdef MSGCLIENT_LOG
+        for(i = 0; i < maxsize-2; i++)
             cout << "[D1]_node list "<<node_list[i] << endl;
-        }
+//#endif
 
-        // list -=  myid -= receive id;
-        if(maxsize > 2)
+        // randomize
+        for(i = maxsize-3; i > 0; i--)
         {
-
-            for(i = maxsize-3; i > 0; i--)
-            {
-                j = rand() % i;
-                std::swap(node_list[i], node_list[j]);
-            }
+            j = rand() % i;
+            std::swap(node_list[i], node_list[j]);
         }
-        node_list[maxsize-2] = this->receiver;
+
+        // need to fix
+        this->route_length = maxsize-1;
+
+        node_list[route_length-1] = this->receiver;
 //#ifdef MSGCLIENT_LOG
         for(i = 0; i < maxsize-1; i++)
-        {
-            cout << "[D2]_node list "<<node_list[i] << endl;
-        }
+            cout << "[D2]_node list " << node_list[i] << endl;
 //#endif
     }
     else
@@ -93,45 +95,65 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    int rv = 0;
-    string recv_ip = ((UserInfo*)(UserInfoMap[this->node_list[0]]))->GetIpAddr();
+    string recv_ip = GetIpAddress(this->node_list[0]);
     this->send_sock->Connect(recv_ip);
+
 #ifdef MSGCLIENT_LOG
     cout << recv_ip << endl;
 #endif
-    //rv += SendLength();
     rv += SendData();
     return rv;
 }
 
-int MsgClient::SendLength()
-{
-    int rv = 0;
-    Json::Value root;
-    root["sender"] = myInfo->GetGithubId();
-    root["receiver"] = this->receiver;
-    root["length"] = this->msg.length();
-    rv = this->send_sock->Send(root.toStyledString());
-    return rv;
+    return SendData();
 }
 
 int MsgClient::SendData()
 {
     int rv = 0;
+    string data = "";
+
     Json::Value root;
     root["sender"] = myInfo->GetGithubId();
     root["receiver"] = this->receiver;
     root["data"] = this->msg;
-    rv = this->send_sock->Send(root.toStyledString());
+    data = root.toStyledString();
+
+    data = EncryptMsg(data);
+    rv = this->send_sock->Send(data);
+
     return rv;
 }
 
-int MsgClient::EncryptMsg(string data)
+string MsgClient::EncryptMsg(string data)
 {
-	return 0;
+    for(int i = this->route_length; i>0 ; i--)
+    {
+        string receiver = this->node_list[i-1];
+        //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
+
+        Json::Value root;
+        root["receiver"] = receiver;
+        root["data"] = data;
+        data = root.toStyledString();
+    }
+//#ifdef MSGCLIENT_LOG
+    cout << data << endl;
+//#endif
+    return data;
 }
 
 MsgClient::~MsgClient()
 {
 
+}
+
+string MsgClient::GetIpAddress(string github_id)
+{
+    return ((UserInfo*)(UserInfoMap[github_id]))->GetIpAddr();
+}
+
+string MsgClient::GetPGPKeyId(string github_id)
+{
+    return ((UserInfo*)(UserInfoMap[github_id]))->GetPGPKeyId();
 }
