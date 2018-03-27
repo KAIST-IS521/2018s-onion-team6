@@ -42,7 +42,6 @@ return 1;
 }
 void MsgServer::Start()
 {
-   // this->JsonParsor("1");
    std::thread serverRun([this] { RecvServer();});
    serverRun.detach();
 }
@@ -80,21 +79,28 @@ int MsgServer::JsonParsor(string msg)
         Json::Value root;
         Json::CharReaderBuilder builder;
         Json::CharReader * reader = builder.newCharReader();
-        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+        string github_id;
+        string receiver_id;
+        string pgp_data;
+        try
+        {
 
-        cout << msg <<endl;
-        //get json data
+            reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+            Json::Value j_sender    = root["sender"];
+            Json::Value j_receiver  = root["receiver"];
+            Json::Value j_data      = root["data"];
 
-        Json::Value j_sender    = root["sender"];
-        Json::Value j_receiver  = root["receiver"];
-        Json::Value j_data      = root["data"];
+            github_id    = j_sender.asCString();
+            receiver_id  = j_receiver.asCString();
+            pgp_data     = j_data.asCString();
+        }
+        catch (int exceptionCode)
+        {
+            cout << "[-]JSON PROTOCOL IS BROKEN" <<endl;
+            exit(0);
+            return 0;
+        }
 
-        //cast json data
-        string github_id    = j_sender.asCString();
-        string receiver_id  = j_receiver.asCString();
-        string pgp_data     = j_data.asCString();
-
-            // MY MESSAGE
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] Message arrived" << endl;
