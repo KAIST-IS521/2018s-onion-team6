@@ -1,5 +1,5 @@
 #CC=gcc
-RM=rm
+RM=rm -rf
 CC=clang++-5.0
 MK=mkdir
 #CC=g++
@@ -25,6 +25,8 @@ TA="clientsocket"
 MS="msgserver"
 MC="msgclient"
 default :
+	$(RM) ./CLIENT
+	$(MK) ./CLIENT
 	$(CC) $(OBJ_OPT) -c $(SRC)$(O).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(P).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(C).cpp $(JSON_OPTION)
