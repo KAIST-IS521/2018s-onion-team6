@@ -124,14 +124,10 @@ int MsgClient::SendData()
 
 string MsgClient::EncryptMsg(string data)
 {
-    for(int i = this->route_length; i>0 ; i--)
+    for(int i = this->route_length; i>1 ; i--)
     {
         string receiver = this->node_list[i-1];
-        string sender = "";
-        if (i==1)
-            sender = myInfo->GetGithubId();
-        else
-            sender = this->node_list[i-2];
+        string sender = this->node_list[i-2];
         //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
 
         Json::Value root;
