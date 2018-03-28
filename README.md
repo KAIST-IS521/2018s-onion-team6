@@ -4,7 +4,7 @@
 
 ## Table of contents
 * [Getting Started](#getting-started)
-  * [PGPG key](#gpg-key)
+  * [PGP key](#gpg-key)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
 * [Running the App](#getting-started)
