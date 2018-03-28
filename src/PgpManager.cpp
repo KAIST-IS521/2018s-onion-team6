@@ -141,6 +141,7 @@ string PgpManager::EncryptData(string sender, string pubKeyID, string data)
         (char *)"--batch",
         (char *)"--yes",
         (char *)"--always-trust",
+        (char *)"--armor",
         (char *)"-r",
         (char *)pubKeyID.c_str(),
         (char *)"--encrypt-files",
@@ -148,7 +149,7 @@ string PgpManager::EncryptData(string sender, string pubKeyID, string data)
         NULL
     };
     CallLocalGPG(argv);
-    return this->readFile(fileName+".gpg");
+    return this->readFile(fileName+".asc");
 
 }
 
