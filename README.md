@@ -3,17 +3,17 @@
 ## Abstract
 
 ## Table of contents
-* [Getting Started](#Getting Started)
-  * [Prerequisites](#Prerequisites)
-  * [Installing](#Installation)
-* [Usage](#Usage)
-* [Authors](#Authors)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installing](#installation)
+* [Usage](#usage)
+* [Authors](#authors)
 
 ## Getting Started
 
 ### Prerequisites
 
-We compile out program with `clang`
+We compile our program with `clang`
 
 ```
 $ sudo apt-get install clang-5.0
