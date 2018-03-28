@@ -9,9 +9,9 @@ BUILD_DIR = ./BUILD/
 
 SRC=src/
 
-OPTION= -lpthread -std=c++11
 #OPTION=-mllvm -sub -llvm -fla
 JSON_OPTION=-DJSON_IS_AMALGAMATION -I$(SRC)
+OPTION= -lpthread -std=c++11 $(JSON_OPTION)
 
 H="heartbeat"
 O="onion_messenger"
@@ -40,9 +40,7 @@ default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(MS).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(MC).cpp $(JSON_OPTION)
 
-	$(CC) $(OPTION) -o $(BUILD_DIR)/onion src/main.cpp $(SRC)$(J).cpp *.o  $(JSON_OPTION)
-
-
+	$(CC) $(OPTION) -o $(BUILD_DIR)/onion src/main.cpp $(SRC)$(J).cpp *.o
 clean:
 	$(RM) .$(BUILD_DIR)/*
 	$(RM)  *.o
