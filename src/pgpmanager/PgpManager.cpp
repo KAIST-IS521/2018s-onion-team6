@@ -4,14 +4,14 @@ using namespace std;
 
 
 enum {
-	GET_GPG_VERSION = 0,
-	IMPORT_PRIVATE_KEY,
+    GET_GPG_VERSION = 0,
+    IMPORT_PRIVATE_KEY,
     GET_LIST_KEYS
 };
 
 char* const  MY_GPG_OPTION[] = {
-	"--version",
-	"--import",
+    "--version",
+    "--import",
     "--list-keys"
 };
 
@@ -22,10 +22,10 @@ PgpManager::~PgpManager() {}
 PgpManager::PgpManager() {
     cout <<" Enter PassPharase : " ;
     cin >> MY_PASSPHRASE;
-	if (CheckProperGPG()) cout << "PROPER_GPG" << endl;              // proper handling needed
-	else cout << "INVALID_GPG" << endl;
+    if (CheckProperGPG()) cout << "PROPER_GPG" << endl;              // proper handling needed
+    else cout << "INVALID_GPG" << endl;
 
-	ImportMyPrivateKey(PRIVATE_KEY);
+    ImportMyPrivateKey(PRIVATE_KEY);
     getKeyList();
 
     EncryptData("test.txt", "c6140206");
@@ -36,25 +36,64 @@ PgpManager::PgpManager() {
 }
 
 PgpManager::PgpManager(char* PubKey) {
-	PgpManager();
+    PgpManager();
 }
 
 int
 PgpManager::ImportMyPrivateKey(char*  privKey) {
 
     string TAG = "ImportMyPrivateKey";
-   char* argv[] = {
+    char* argv[] = {
         GPG_COMMAND, 
         MY_GPG_OPTION[IMPORT_PRIVATE_KEY],
         privKey,
         NULL
     };
-	CallLocalGPG(TAG,argv);
+    CallLocalGPG(TAG,argv);
 
 
 
 }
 
+int
+PgpManager::EditKey(char* key){
+       string TAG = "EDITKEY";
+       char* argv[] = {
+        GPG_COMMAND,
+        "--edit-key",
+        key,
+        NULL
+
+       };
+
+       CallLocalGPG(TAG, argv);
+
+}
+
+int 
+PgpManager::RecvKey(char* pubKey){
+
+    string TAG = "RecvKey";
+    char* argv[] = {
+        GPG_COMMAND,
+        "--keyserver",
+        "keyserver.ubuntu.com",
+        "--recv-keys",
+        pubKey,
+        NULL
+    };
+    CallLocalGPG(TAG, argv);
+}
+
+int 
+PgpManager::AddPukey(char* pubKey){
+
+    // recv & save to userInfo
+       RecvKey(pubKey);
+       //adding this key to userinfo class is needed
+
+    
+}
 
 void
 PgpManager::getKeyList(){
@@ -67,15 +106,15 @@ PgpManager::getKeyList(){
     };
     CallLocalGPG(TAG, argv);
     /*
-    printf("Output : (%.*s)\n", nbytes, DisplayedBuf);
-    */
+       printf("Output : (%.*s)\n", nbytes, DisplayedBuf);
+     */
 
 }
 
 
 void
 PgpManager::CleanDisplayedBuf() {
-	for (int i = 0; i<MAX_DISPLAY_BUF; i++)DisplayedBuf[i] = '\0';
+    for (int i = 0; i<MAX_DISPLAY_BUF; i++)DisplayedBuf[i] = '\0';
     nbytes = 0;
 }
 
@@ -100,7 +139,7 @@ PgpManager::DecryptData(char* src, char* dst){
 
 
 int
-PgpManager::EncryptData(char* srcFilename, char* pubKey){
+PgpManager::EncryptData(char* srcFilename, char* pubKeyID){
 
     //gpg  --yes -r c6140206 --encrypt-files test.txt
     string TAG = "ENCRYPT";
@@ -108,7 +147,7 @@ PgpManager::EncryptData(char* srcFilename, char* pubKey){
         GPG_COMMAND,
         "--yes",
         "-r",
-        pubKey,
+        pubKeyID,
         "--encrypt-files",
         srcFilename,
         //"test.txt",
@@ -118,78 +157,78 @@ PgpManager::EncryptData(char* srcFilename, char* pubKey){
 }
 
 
-void
+    void
 PgpManager::CallLocalGPG(string msg, char* const argv[])
 {
-	DEBUG cout << msg + "start!!" << endl;
-	int link[2];
-	CleanDisplayedBuf();
-	pid_t pid;
+    DEBUG cout << msg + "start!!" << endl;
+    int link[2];
+    CleanDisplayedBuf();
+    pid_t pid;
 
 
-	pipe(link);                 // error handling needed
-	pid = fork();               // error hadnling needed
+    pipe(link);                 // error handling needed
+    pid = fork();               // error hadnling needed
 
     // Pid handling needed
-	if (pid == 0) {
+    if (pid == 0) {
         /*
-        DEBUG{
-            cout << argv[0] << endl;
-            cout << argv[1] << endl;;
-            cout << argv[2] << endl;
-        }
-        */
+           DEBUG{
+           cout << argv[0] << endl;
+           cout << argv[1] << endl;;
+           cout << argv[2] << endl;
+           }
+         */
 
 
-		dup2(link[1], STDOUT_FILENO);
-		close(link[0]);
-		close(link[1]);
-		
+        dup2(link[1], STDOUT_FILENO);
+        close(link[0]);
+        close(link[1]);
+
         execv(GPG_PATH, argv );
-	}
+    }
 
-	else {
+    else {
 
         int status;
         pid_t mChild = wait(&status);
         cout << "----waiting : " << msg << "----" << endl;
 
-		close(link[1]);
+        close(link[1]);
 
-		int nbytes = read(link[0], DisplayedBuf, MAX_DISPLAY_BUF);
-		DEBUG  printf("Output : (%.*s)\n", nbytes, DisplayedBuf);       // parsing needed
-       
-	}
+        int nbytes = read(link[0], DisplayedBuf, MAX_DISPLAY_BUF);
+        DEBUG  printf("Output : (%.*s)\n", nbytes, DisplayedBuf);       // parsing needed
+
+    }
 
 }
 
 int
 PgpManager::CheckProperGPG() {
-   
+
     string TAG = "CheckerProperGPG";
     char* argv[] = {
         GPG_COMMAND,
         MY_GPG_OPTION[GET_GPG_VERSION],
-            NULL
+        NULL
     };
 
 
-	CallLocalGPG(TAG, argv);
+    CallLocalGPG(TAG, argv);
 
-	char sig[11];
-	for (int i = 0; i<10; i++) sig[i] = DisplayedBuf[i];
-	sig[10] = '\0';
-	string mSig = sig;
+    char sig[11];
+    for (int i = 0; i<10; i++) sig[i] = DisplayedBuf[i];
+    sig[10] = '\0';
+    string mSig = sig;
 
 
     DEBUG printf("Output : (%.*s)\n", MAX_DISPLAY_BUF, DisplayedBuf);
-	if (mSig.find("(GnuPG") != string::npos) {
+    if (mSig.find("(GnuPG") != string::npos) {
 
-		return PROPER_GPG;
-	}
+        return PROPER_GPG;
+    }
 
 
-	return INVALID_GPG;
+    return INVALID_GPG;
 
 
 }
