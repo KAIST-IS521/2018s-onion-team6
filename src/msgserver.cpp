@@ -100,17 +100,16 @@ int MsgServer::JsonParsor(string msg)
             exit(0);
             return 0;
         }
-
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] Message arrived" << endl;
-            cout << this->PGPDecrypt(pgp_data) << endl;
+            cout << pgp_data << endl;
         }
-            // NOT MY MESSAGE
+        // NOT MY MESSAGE
         else
         {
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
-            cout << "[D]JsonParsor : pgp_data" << pgp_data <<endl; 
+            cout << "[D] Forward to" <<  receiver_id <<  "Data:" << pgp_data <<endl;
             this->MsgClient(nextIp,pgp_data);
             return 1;
         }
@@ -152,7 +151,7 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             this->JsonParsor(decryptedMsg);
         }
-        std::cout << "[D]"<<msg;
+        //std::cout << "[D]"<<msg;
     }
     delete client_sock;
     std::cout << "Client disconnected" << std::endl;
