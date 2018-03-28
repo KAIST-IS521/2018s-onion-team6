@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define DEBUG_FLAG 0 
+#define DEBUG_FLAG 0
 #define DEBUG if(DEBUG_FLAG)
 
 #define PROPER_GPG  1111
@@ -42,13 +42,15 @@ public:
 
 	int ImportMyPrivateKey(char* const  privKey);         // importing node's private key
 
-	
-
+	// Adding other's pubkey
+    int AddPubkey(char* pubKey);
+    int RecvKey(char* pubKey);
+    int EditKey(char* key);
     /*
        getKeyList return values customizing needed
      */
-    void getKeyList();  
-
+    void getKeyList();      
+    
     void CallLocalGPG(string msg, char* const argv[]);
 	void CleanDisplayedBuf();
 
@@ -57,6 +59,8 @@ private:
 	char DisplayedBuf[MAX_DISPLAY_BUF];
     int nbytes; // For pipe reading
     char MY_PASSPHRASE [128];
+    char MY_PUBKEY[64];
+    void Authentication();
 	//   const int PROPER_GPG = 1111;
 	//  const int INVALID_GPG = 0;
 	// const  char* GPG_PATH = "/usr/bin/gpg";

@@ -28,6 +28,7 @@ PgpManager::PgpManager() {
     ImportMyPrivateKey(PRIVATE_KEY);
     getKeyList();
 
+    
     EncryptData("test.txt", "c6140206");
     cout << "encrypt done" << endl;
     DecryptData("test.txt.gpg", "decryptedData.txt");
@@ -50,7 +51,15 @@ PgpManager::ImportMyPrivateKey(char*  privKey) {
         NULL
     };
     CallLocalGPG(TAG,argv);
+    
+    // string handling needed
+  //  str
+  //  int index = strstr(DisplayedBuf, "key");
+  //  strncpy(MY_PUBKEY, DisplayedBuf[index+4], 8);
+  //  MY_PUBKEY[8] = '\0';
 
+    //cout << "---------------My PubKey : " << MY_PUBKEY << endl;
+    
 
 
 }
@@ -86,7 +95,7 @@ PgpManager::RecvKey(char* pubKey){
 }
 
 int 
-PgpManager::AddPukey(char* pubKey){
+PgpManager::AddPubkey(char* pubKey){
 
     // recv & save to userInfo
        RecvKey(pubKey);
@@ -201,6 +210,16 @@ PgpManager::CallLocalGPG(string msg, char* const argv[])
     }
 
 }
+
+
+void
+PgpManager::Authentication(){
+
+    string TAG = "Authentication";
+    // auth file path handling needed
+   // EncryptData("auth",
+}
+
 
 int
 PgpManager::CheckProperGPG() {
