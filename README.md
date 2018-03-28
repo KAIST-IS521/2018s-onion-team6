@@ -4,7 +4,7 @@
 
 ## Table of contents
 * [Getting Started](#getting-started)
-  * [GPG key](#gpg-key)
+  * [PGPG key](#gpg-key)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
 * [Running the App](#getting-started)
@@ -15,10 +15,10 @@
 
 ## Getting Started
 
-### GPG key
+### PGP key
 
-If you don't have the GPG key, you should make it.
-And you should export your private key to `private.key` file.
+If you don't have the PGP key, you should make it. </br>
+And you have to export your private key to `private.key` file.
 
 ```
 # Generate a new keypair
