@@ -5,7 +5,7 @@
 ## Table of contents
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
-  * [Installing](#installation)
+  * [Installation](#installation)
 * [Usage](#usage)
 * [Authors](#authors)
 
@@ -40,7 +40,7 @@ $ git clone https://github.com/KAIST-IS521/2018s-onion-team6.git
 $ cd 2018s-onion-team6.git
 
 # Install dependencies
-$ 
+$ ./setup.sh
 
 # build
 $ make
