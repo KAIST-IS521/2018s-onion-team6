@@ -37,53 +37,65 @@ bool MsgClient::CheckReceiver()
         return false;
     return true;
 }
+
 bool MsgClient::SetRoute()
 {
-    int i, j= 0;
-    int maxsize = UserInfoMap.size();
-    string myGitId = myInfo->GetGithubId();
+    int i=0, j= 0;
+    int node_list_size  = 0;
+    int rnd             = 0;
+    int maxsize         = UserInfoMap.size();
+    string my_github_id = myInfo->GetGithubId();
 
-    if(maxsize > 1 && maxsize < 100)
+    srand(time(NULL));
+    if(maxsize > 2 && maxsize < 100)
     {
-        for(i = 0; i < maxsize; i++)
-        {
-            node_list[i]="";
-        }
-
-        i = 0;
+        // initialize
+        for(i = 0; i < maxsize; i++) node_list[i]="";
+        cout << "[D]1" <<endl;
+        rnd = rand() % maxsize;
+        cout << "[D]2" <<endl;
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
-        {
-            if(element.first != this->receiver && element.first != myGitId)
+         {
+            // except for sender, receiver
+            j++;
+            if(element.first != this->receiver && element.first != my_github_id)
             {
-                node_list[i]=element.first;
-                i++;
+                if( rnd % j == 0 )
+                {
+                    continue;
+                }
+                else
+                {
+                    node_list[node_list_size]=element.first;
+                    node_list_size++;
+                }
             }
         }
-
-        j = 0;
-        srand(time(NULL));
-
-        for(i = 0; i < maxsize-2; i++)
+    cout << "[D]3" << endl;
+    //[0] = 다음 노드 주소
+    //[마지막] = 최종 도착 노드
+    // 사이만 돌려야함
+    //
+        // randomize node list except src and dest.
+        for(i = node_list_size-1; i >=0; i--)
         {
-            cout << "[D1]_node list "<<node_list[i] << endl;
-        }
-
-        // list -=  myid -= receive id;
-        if(maxsize > 2)
-        {
-            for(i = maxsize-3; i > 0; i--)
+            if(i==0)break;
+            else
             {
                 j = rand() % i;
                 std::swap(node_list[i], node_list[j]);
             }
         }
 
-        node_list[maxsize-2] = this->receiver;
+        cout << "[D]4" << endl;
+        // need to fix
+        node_list[node_list_size] = this->receiver;
+
+        this->route_length = node_list_size+1;
+    cout <<"[D]5" << endl;
 //#ifdef MSGCLIENT_LOG
-        for(i = 0; i < maxsize-1; i++)
-        {
-            cout << "[D2]_node list "<<node_list[i] << endl;
-        }
+        for(i = 0; i < this->route_length; i++)
+            cout << "[D2]msgClient : node list " << node_list[i] << endl;
 //#endif
     }
     else
@@ -96,7 +108,7 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    string recv_ip = ((UserInfo*)(UserInfoMap[this->node_list[0]]))->GetIpAddr();
+    string recv_ip = GetIpAddress(this->node_list[0]);
     this->send_sock->Connect(recv_ip);
 
 #ifdef MSGCLIENT_LOG
@@ -109,20 +121,51 @@ int MsgClient::SendMsg()
 int MsgClient::SendData()
 {
     int rv = 0;
+    string data = "";
+
     Json::Value root;
     root["sender"] = myInfo->GetGithubId();
     root["receiver"] = this->receiver;
     root["data"] = this->msg;
-    rv = this->send_sock->Send(root.toStyledString());
+    data = root.toStyledString();
+
+    data = EncryptMsg(data);
+    rv = this->send_sock->Send(data);
+
     return rv;
 }
 
-int MsgClient::EncryptMsg(string data)
+string MsgClient::EncryptMsg(string data)
 {
-	return 0;
+    for(int i = this->route_length; i>1 ; i--)
+    {
+        string receiver = this->node_list[i-1];
+        string sender = this->node_list[i-2];
+        //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
+
+        Json::Value root;
+        root["sender"] = sender;
+        root["receiver"] = receiver;
+        root["data"] = data;
+        data = root.toStyledString();
+    }
+//#ifdef MSGCLIENT_LOG
+    cout << data << endl;
+//#endif
+    return data;
 }
 
 MsgClient::~MsgClient()
 {
 
+}
+
+string MsgClient::GetIpAddress(string github_id)
+{
+    return ((UserInfo*)(UserInfoMap[github_id]))->GetIpAddr();
+}
+
+string MsgClient::GetPGPKeyId(string github_id)
+{
+    return ((UserInfo*)(UserInfoMap[github_id]))->GetPGPKeyId();
 }

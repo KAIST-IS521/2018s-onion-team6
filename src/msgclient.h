@@ -31,6 +31,7 @@ class MsgClient
         string msg;
         TCPSocket* send_sock;
         array <string,100> node_list;
+        int route_length;
 
         bool CheckReceiver();
         bool SetRoute();
@@ -38,7 +39,9 @@ class MsgClient
         int SendMsg();
         int SendData();
 
-        int EncryptMsg(string data);
+        string EncryptMsg(string data);
+        string GetIpAddress(string github_id);
+        string GetPGPKeyId(string github_id);
 };
 
 #endif // MESSAGECLIENT_H

@@ -42,8 +42,8 @@ return 1;
 }
 void MsgServer::Start()
 {
-    std::thread serverRun([this] { RecvServer();});
-    serverRun.detach();
+   std::thread serverRun([this] { RecvServer();});
+   serverRun.detach();
 }
 void MsgServer::RecvServer()
 {
@@ -74,49 +74,47 @@ void MsgServer::RecvServer()
 int MsgServer::JsonParsor(string msg)
 {
         string * data = new string(msg);
-/*
+
         JSONCPP_STRING errs;
         Json::Value root;
         Json::CharReaderBuilder builder;
         Json::CharReader * reader = builder.newCharReader();
-        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
-
-
-        //get json data
-        Json::Value j_sender    = root["sender"];
-        Json::Value j_receiver  = root["receiver"];
-        Json::Value j_length    = root["length"];
-        Json::Value j_data      = root["data"];
-
-        //cast json data
-        string github_id    = j_sender.asCString();
-        string receiver_id  = j_receiver.asCString();
-        string pgp_data     = j_data.asCString();
-        int data_len        = 0;
-        data_len            = j_data.asInt();
-
-        if(data_len != 0)
+        string github_id;
+        string receiver_id;
+        string pgp_data;
+        try
         {
+
+            reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+            Json::Value j_sender    = root["sender"];
+            Json::Value j_receiver  = root["receiver"];
+            Json::Value j_data      = root["data"];
+
+            github_id    = j_sender.asCString();
+            receiver_id  = j_receiver.asCString();
+            pgp_data     = j_data.asCString();
+        }
+        catch (int exceptionCode)
+        {
+            cout << "[-]JSON PROTOCOL IS BROKEN" <<endl;
+            exit(0);
             return 0;
         }
+        if(receiver_id == myInfo->GetGithubId())
+        {
+            cout << "[!] Message arrived" << endl;
+            cout << pgp_data << endl;
+        }
+        // NOT MY MESSAGE
         else
         {
-            // MY MESSAGE
-            if(receiver_id == myInfo->GetGithubId())
-            {
-                cout << "[!] Message arrived" << endl;
-                cout << this->PGPDecrypt(pgp_data) << endl;
-            }
-            // NOT MY MESSAGE
-            else
-            {
-                string nextIp = UserInfoMap[github_id]->GetIpAddr();
-                this->MsgClient(nextIp,pgp_data);
-
-                return 1;
-            }
+            string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
+            cout << "[D]msgServer-> Forward to" <<  receiver_id <<  "Data:" << pgp_data;
+            cout <<endl << endl;
+            this->MsgClient(nextIp,pgp_data);
+            return 1;
         }
-*/
+
     delete data;
     data = NULL;
     return 0;
@@ -139,9 +137,7 @@ string MsgServer::PGPDecrypt(string msg)
 //
 void MsgServer::Worker(ClientSocket* client_sock)
 {
-    std::cout << "Got a client!" << std::endl;
     SocketAddress* addr = client_sock->get_sockaddr();
-    std::cout << addr->get_address() << ":" << addr->get_port() << std::endl;
     while (true)
     {
         std::string msg;
@@ -154,7 +150,6 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             this->JsonParsor(decryptedMsg);
         }
-        std::cout << "[D]"<<msg;
     }
     delete client_sock;
     std::cout << "Client disconnected" << std::endl;
