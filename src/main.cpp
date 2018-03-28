@@ -5,7 +5,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "[D] TEST START MAIN "<< endl;
+    string tmp = "";
+    getline(cin,tmp);
     OnionMessenger *messenger = new OnionMessenger();
     messenger->StartApp();
 }

@@ -1,4 +1,5 @@
 #!/bin/sh
-/bin/bash
-sleep infinity
+/home/jff/onion
+
+#sleep infinity
 
