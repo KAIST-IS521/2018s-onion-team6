@@ -42,5 +42,5 @@ default :
 
 	$(CC) $(OPTION) -o $(BUILD_DIR)/onion src/main.cpp $(SRC)$(J).cpp *.o
 clean:
-	$(RM) .$(BUILD_DIR)/*
+	$(RM) $(BUILD_DIR)/*
 	$(RM)  *.o
