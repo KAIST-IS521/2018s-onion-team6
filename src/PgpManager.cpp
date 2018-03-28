@@ -4,25 +4,21 @@ PgpManager::~PgpManager() {}
 PgpManager::PgpManager(string passwd)
 {
     passphrase = passwd;
-
     ImportMyPrivateKey();
-    string aaaa="aaaa";
-    //getKeyList();
-
-    //EncryptData("test.txt", "c6140206");
-    //cout << "encrypt done" << endl;
-    //DecryptData("test.txt.gpg", "decryptedData.txt");
-    //cout << "decrypt done" << endl;
-
 }
 
 
 string PgpManager::ImportMyPrivateKey()
 {
 
-    char* argv[] = { (char *)"gpg",(char *)"--import", (char *)"private.key",NULL};
-    string result_str = CallLocalGPG(argv);
-    if(result_str.find("no valid OpenPGP data found") != string::npos)
+    char* argv[] = {
+        (char *)"gpg",
+        (char *)"--import",
+        (char *)"private.key",
+        NULL
+    };
+    string ret = CallLocalGPG(argv);
+    if(ret.find("no valid OpenPGP data found") != string::npos)
     {
         cout << "[!] PRIVATE KEY IS NOT VALID" << endl;
         exit(0);
@@ -31,9 +27,10 @@ string PgpManager::ImportMyPrivateKey()
     else
     {
         string keys="gpg: key ";
-        cout << "[D1]" << result_str.substr((result_str.find(keys))+keys.length(),8) << endl;
+        string key_id = ret.substr((ret.find(keys))+keys.length(),8);
+        myInfo->SetPGPKeyId(key_id);
     }
-    return result_str;
+    return ret;
 
 }
 
@@ -48,71 +45,44 @@ string PgpManager::EditKey(char* key)
        return CallLocalGPG(argv);
 }
 
-string PgpManager::RecvKey(char* pubKey)
+string PgpManager::RecvKey(string pubKey_id)
 {
     char* argv[] = {
         (char *)"gpg",
         (char *)"--keyserver",
         (char *)"keyserver.ubuntu.com",
         (char *)"--recv-keys",
-        (char *)pubKey,
+        (char *)pubKey_id.c_str(),
         NULL
     };
     return CallLocalGPG(argv);
 }
 
-string PgpManager::AddPubkey(char* pubKey){
-
-    // recv & save to userInfo
-       RecvKey(pubKey);
-    //adding this key to userinfo class is needed
-
-       return "";
-}
-
-string PgpManager::getKeyList(){
-
-    char* argv[] = {
-        (char *)"gpg",
-        (char *)"--list-keys",
-        NULL
-    };
-    return CallLocalGPG(argv);
-    /*
-       printf("Output : (%.*s)\n", nbytes, DisplayedBuf);
-     */
-
-}
-
-string PgpManager::DecryptData(char* src, char* dst){
+string PgpManager::DecryptData(string src, string dst){
     char* argv[]={
         (char *)"gpg",
         (char *)"--yes",
         (char *)"--passphrase",
         (char *)this->passphrase.c_str(),
         (char *)"-o",
-        (char *)dst,
+        (char *)dst.c_str(),
         (char *)"--decrypt",
-        (char *)src,
+        (char *)src.c_str(),
         NULL
     };
-
     return CallLocalGPG(argv);
-
 }
 
-
-string PgpManager::EncryptData(char* srcFilename, char* pubKeyID){
-
+string PgpManager::EncryptData(string srcFilename, string pubKeyID)
+{
     //gpg  --yes -r c6140206 --encrypt-files test.txt
-    string TAG = "ENCRYPT";
     char* argv[]={
         (char *)"gpg",
         (char *)"--yes",
         (char *)"-r",
-        (char *)pubKeyID,
+        (char *)pubKeyID.c_str(),
         (char *)"--encrypt-files",
-        (char *)srcFilename,
+        (char *)srcFilename.c_str(),
         NULL
     };
     return CallLocalGPG(argv);
@@ -126,10 +96,8 @@ string PgpManager::CallLocalGPG(char* const argv[])
     memset(displaybuff,0,4096);
 
     pid_t pid;
-
     pipe(link);                 // error handling needed
     pid = fork();               // error hadnling needed
-
     if (pid == 0)
     {
         dup2(link[1], STDOUT_FILENO);
@@ -138,7 +106,6 @@ string PgpManager::CallLocalGPG(char* const argv[])
         close(link[1]);
         execv((char *)"/usr/bin/gpg", argv);
     }
-
     else
     {
         int status;
