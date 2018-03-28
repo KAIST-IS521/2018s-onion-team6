@@ -58,34 +58,98 @@ string PgpManager::RecvKey(string pubKey_id)
     return CallLocalGPG(argv);
 }
 
-string PgpManager::DecryptData(string src, string dst){
+string PgpManager::DecryptData(string data)
+{
+    srand(time(NULL));
+    string src = std::to_string(rand() % 100000000);
+    string fileName = this->saveFile(src,data);
     char* argv[]={
         (char *)"gpg",
+        (char *)"--batch",
         (char *)"--yes",
         (char *)"--passphrase",
         (char *)this->passphrase.c_str(),
-        (char *)"-o",
-        (char *)dst.c_str(),
+        (char *)"--output",
+        (char *)("./MEMBER/"+fileName).c_str(),
         (char *)"--decrypt",
-        (char *)src.c_str(),
+        (char *)("./MEMBER/"+fileName).c_str(),
         NULL
     };
-    return CallLocalGPG(argv);
+    CallLocalGPG(argv);
+    return this->readFile(fileName);
 }
-
-string PgpManager::EncryptData(string srcFilename, string pubKeyID)
+string PgpManager::saveFile(string gitId, string data)
 {
-    //gpg  --yes -r c6140206 --encrypt-files test.txt
+    string fileName=gitId;
+    size_t tokenlen=0;
+
+    //directory traversal mitigation
+    while( fileName.find("/") != string::npos )
+    {
+         tokenlen = fileName.find("/");
+         fileName = fileName.substr(tokenlen+1);
+    }
+    string filePath = "./MEMBER/" + fileName;
+    ofstream writeFile(filePath.data());
+    if(writeFile.is_open())
+    {
+        writeFile << data;
+        writeFile.close();
+    }
+    else
+    {
+        cout << "[!] FILE OPEN ERROR " << gitId << endl;
+        exit(0);
+    }
+    return fileName;
+}
+string PgpManager::readFile(string gitId)
+{
+    string fileName=gitId;
+    size_t tokenlen=0;
+
+    //directory traversal mitigation
+    while( fileName.find("/") != string::npos )
+    {
+         tokenlen = fileName.find("/");
+         fileName = fileName.substr(tokenlen+1);
+    }
+    string filePath = "./MEMBER/" + fileName;
+    ifstream openFile(filePath.data());
+    if(openFile.is_open())
+    {
+        string data="";
+        string line;
+        while(getline(openFile, line))
+        {
+            data += line;
+        }
+        return data;
+    }
+    else
+    {
+        cout << "[!] FILE OPEN ERROR " << filePath << endl;
+        exit(0);
+    }
+    return "";
+}
+string PgpManager::EncryptData(string sender, string pubKeyID, string data)
+{
+    string fileName = this->saveFile(sender,data);
     char* argv[]={
         (char *)"gpg",
+        (char *)"--batch",
         (char *)"--yes",
+        (char *)"--always-trust",
         (char *)"-r",
         (char *)pubKeyID.c_str(),
         (char *)"--encrypt-files",
-        (char *)srcFilename.c_str(),
+        (char *)("./MEMBER/"+fileName).c_str(),
         NULL
     };
-    return CallLocalGPG(argv);
+    CallLocalGPG(argv);
+    return this->readFile(fileName+".gpg");
+
 }
 
 

@@ -13,11 +13,12 @@
 #include "socket.h"
 #include "user_info.h"
 #include "clientsocket.h"
-
+#include "PgpManager.h"
 using namespace std;
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
+extern PgpManager *pgpmanager;
 
 class MsgClient
 {

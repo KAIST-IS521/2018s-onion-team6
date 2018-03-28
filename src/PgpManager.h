@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 #include "user_info.h"
 
@@ -22,11 +23,12 @@ public:
     PgpManager(string passwd);
     ~PgpManager();
 
-    string EncryptData(string srcFileName, string  pubKey);
-    string DecryptData(string src, string dst);
+    string EncryptData(string sender, string  pubKey, string data);
+    string DecryptData(string dst);
 
     string RecvKey(string pubKey);
     string EditKey(char* key);
+
 
 private:
     int nbytes; // For pipe reading
@@ -35,7 +37,8 @@ private:
     void Authentication();
     string ImportMyPrivateKey();
     string CallLocalGPG(char* const argv[]);
-
+    string readFile(string sender);
+    string saveFile(string sender, string data);
 };
 
 
