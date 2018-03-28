@@ -4,12 +4,29 @@
 
 ## Table of contents
 * [Getting Started](#getting-started)
+  * [GPG key](#gpg-key)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
+* [Running the App](#getting-started)
+  * [In local](#in-local)
+  * [In docker](#in-docker)
 * [Usage](#usage)
 * [Authors](#authors)
 
 ## Getting Started
+
+### GPG key
+
+If you don't have the GPG key, you should make it.
+And you should export your private key to `private.key` file.
+
+```
+# Generate a new keypair
+$ gpg --gen-key
+
+# Export private key to file
+$ gpg --export-secret-keys -a > private.key
+```
 
 ### Prerequisites
 
@@ -42,24 +59,11 @@ $ cd 2018s-onion-team6.git
 # Install dependencies
 $ ./setup.sh
 
-# build
+# Build 
 $ make
 ```
 
-## Usage
-
-### GPG key
-
-If you don't have the GPG key, you should make it.
-And you should export your private key to `private.key` file.
-
-```
-# Generate a new keypair
-$ gpg --gen-key
-
-# Export private key to file
-$ gpg --export-secret-keys -a > private.key
-```
+## Running the App
 
 ### In local
 
@@ -76,6 +80,19 @@ $ ./
 
 # Run it as one container
 $ ./
+```
+
+## Usage
+
+```
+USAGE :# [COMMAND]
+         {help}                        : print usage
+         {send} {GIT_ID}               : send message
+                          -> {MESSAGE} : input message
+         {ls}                          : show received message list 
+         {cat} {GIT_ID}                : print recvived message
+         {w}                           : show member list
+         {exit}                        : program exit
 ```
 
 ## Authors
