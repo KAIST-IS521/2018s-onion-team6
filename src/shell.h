@@ -10,12 +10,13 @@
 #include "user_info.h"
 #include "msgserver.h"
 #include "msgclient.h"
+#include "PgpManager.h"
 
 using namespace std;
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
-
+extern PgpManager *pgpmanager;
 class Shell
 {
     public:

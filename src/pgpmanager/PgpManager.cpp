@@ -1,5 +1,4 @@
 #include "./PgpManager.h"
-#include <iostream>
 using namespace std;
 
 
@@ -19,25 +18,29 @@ char* const  MY_GPG_OPTION[] = {
 
 PgpManager::~PgpManager() {}
 
-PgpManager::PgpManager() {
-    cout <<" Enter PassPharase : " ;
-    cin >> MY_PASSPHRASE;
-    if (CheckProperGPG()) cout << "PROPER_GPG" << endl;              // proper handling needed
-    else cout << "INVALID_GPG" << endl;
+PgpManager::PgpManager(string passwd) {
+    passphrase = passwd;
+    if (CheckProperGPG())
+    {
+        cout << "PROPER_GPG" << endl;              // proper handling needed
+    }
+    else
+    {
+        cout << "INVALID_GPG" << endl;
+    }
 
     ImportMyPrivateKey(PRIVATE_KEY);
-    getKeyList();
+    //getKeyList();
 
-    
-    EncryptData("test.txt", "c6140206");
-    cout << "encrypt done" << endl;
-    DecryptData("test.txt.gpg", "decryptedData.txt");
-    cout << "decrypt done" << endl;
+    //EncryptData("test.txt", "c6140206");
+    //cout << "encrypt done" << endl;
+    //DecryptData("test.txt.gpg", "decryptedData.txt");
+    //cout << "decrypt done" << endl;
 
 }
 
-PgpManager::PgpManager(char* PubKey) {
-    PgpManager();
+PgpManager::PgpManager() {
+   // PgpManager();
 }
 
 int
@@ -51,16 +54,12 @@ PgpManager::ImportMyPrivateKey(char*  privKey) {
         NULL
     };
     CallLocalGPG(TAG,argv);
-    
     // string handling needed
-  //  str
-  //  int index = strstr(DisplayedBuf, "key");
-  //  strncpy(MY_PUBKEY, DisplayedBuf[index+4], 8);
-  //  MY_PUBKEY[8] = '\0';
-
+    //  str
+    //  int index = strstr(DisplayedBuf, "key");
+    //  strncpy(MY_PUBKEY, DisplayedBuf[index+4], 8);
+    //  MY_PUBKEY[8] = '\0';
     //cout << "---------------My PubKey : " << MY_PUBKEY << endl;
-    
-
 
 }
 

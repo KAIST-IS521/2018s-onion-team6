@@ -124,6 +124,8 @@ string MsgClient::EncryptMsg(string data)
         string sender = this->node_list[i-2];
         //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
 
+        string pub_key_id = ((UserInfo*)UserInfoMap[receiver])->GetPGPKeyId();
+        data = pgpmanager->EncryptData(myInfo->GetGithubId(), pub_key_id, data);
         Json::Value root;
         root["sender"] = sender;
         root["receiver"] = receiver;

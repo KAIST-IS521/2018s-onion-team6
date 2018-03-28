@@ -11,12 +11,14 @@
 #include "serversocket.h"
 #include "clientsocket.h"
 #include "user_info.h"
+#include "PgpManager.h"
 
 #include "json/json.h"
 
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
+extern PgpManager * pgpmanager;
 
 class MsgServer
 {

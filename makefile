@@ -3,7 +3,7 @@ RM=rm -rf
 CC=clang++-5.0
 MK=mkdir
 #CC=g++
-OBJ_OPT=-v -std=c++11
+OBJ_OPT=-std=c++11
 
 BUILD_DIR = ./BUILD/
 
@@ -18,7 +18,7 @@ O="onion_messenger"
 C="shell"
 S="socket"
 U="user_info"
-P="/pgpmanager/PgpManager"
+P="PgpManager"
 J="jsoncpp"
 SS="serversocket"
 SA="socketaddress"

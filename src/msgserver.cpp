@@ -83,6 +83,7 @@ int MsgServer::JsonParsor(string msg)
         string github_id;
         string receiver_id;
         string pgp_data;
+        cout << "[D]JSONP-> " <<endl;
         try
         {
 
@@ -101,6 +102,7 @@ int MsgServer::JsonParsor(string msg)
             exit(0);
             return 0;
         }
+        cout << "[D]JSONP->2 " <<endl;
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] Message arrived" << endl;
@@ -123,15 +125,7 @@ int MsgServer::JsonParsor(string msg)
 }
 string MsgServer::PGPDecrypt(string msg)
 {
-    //try PGP decrypt
-
-    string decryptedMsg="";// = decrypted_pgp_function;
-    //try decrpyt
-    if (1==1) // decrypt success -> try catch
-    {
-        decryptedMsg=msg;
-    }
-    return decryptedMsg;
+    return pgpmanager->DecryptData(msg);
 }
 //  UserInfo* myInfo;
 //  4 unordered_map<string, UserInfo*> UserInfoMap;
@@ -147,6 +141,7 @@ void MsgServer::Worker(ClientSocket* client_sock)
             break;
         }
         string decryptedMsg = this->PGPDecrypt(msg);
+        cout << " [D]PGPDEC -> "<<decryptedMsg << endl;
         if(decryptedMsg!="")
         {
             this->JsonParsor(decryptedMsg);
