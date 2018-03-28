@@ -7,11 +7,11 @@
 #include <string>
 #include <unistd.h>
 #include <cstdlib>
-
+#include <sys/wait.h>
 
 using namespace std;
 
-#define DEBUG_FLAG 1
+#define DEBUG_FLAG 1 
 #define DEBUG if(DEBUG_FLAG)
 
 #define PROPER_GPG  1111
@@ -34,8 +34,8 @@ public:
 
 	int CheckProperGPG();
 
-	int EncryptData(FILE* srcFile, string pubKey[64]);   // Handle files to send
-	int EncryptData(string srcStr, string pubKey[64]);   // Handle msgs to send
+    int EncryptData(FILE* srcFile, string pubKey);   // Handle files to send
+	int EncryptData(char* srcFileName, char* pubKey);   // Handle msgs to send
 
 	int DecryptData(FILE* inFile);      // Handle file from peer
 	int DecryptData(string inSrc);      // Handle msgs from peer
@@ -55,7 +55,8 @@ public:
 private:
 
 	char DisplayedBuf[MAX_DISPLAY_BUF];
-    int nbytes;
+    int nbytes; // For pipe reading
+
 	//   const int PROPER_GPG = 1111;
 	//  const int INVALID_GPG = 0;
 	// const  char* GPG_PATH = "/usr/bin/gpg";

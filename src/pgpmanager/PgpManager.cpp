@@ -26,6 +26,8 @@ PgpManager::PgpManager() {
 	ImportMyPrivateKey(PRIVATE_KEY);
     getKeyList();
 
+    EncryptData("test.txt", "c6140206");
+
 
 }
 
@@ -74,19 +76,38 @@ PgpManager::CleanDisplayedBuf() {
 }
 
 
+int
+PgpManager::EncryptData(char* srcFilename, char* pubKey){
+
+    //gpg  --yes -r c6140206 --encrypt-files test.txt
+    string TAG = "ENCRYPT";
+    char* argv[]={
+        GPG_COMMAND,
+        "--yes",
+        "-r",
+        pubKey,
+        "--encrypt-files",
+        srcFilename,
+        //"test.txt",
+        NULL
+    };
+    CallLocalGPG(TAG, argv);
+}
+
+
 void
 PgpManager::CallLocalGPG(string msg, char* const argv[])
 {
 	DEBUG cout << msg + "start!!" << endl;
 	int link[2];
 	CleanDisplayedBuf();
-	//int pid;
 	pid_t pid;
 
 
 	pipe(link);                 // error handling needed
 	pid = fork();               // error hadnling needed
 
+    // Pid handling needed
 	if (pid == 0) {
         /*
         DEBUG{
@@ -100,15 +121,16 @@ PgpManager::CallLocalGPG(string msg, char* const argv[])
 		dup2(link[1], STDOUT_FILENO);
 		close(link[0]);
 		close(link[1]);
-
-
 		
-       execv(GPG_PATH, argv );
-
-	//	 execl(GPG_PATH, "gpg", cmd_option ,(char*) 0);
+        execv(GPG_PATH, argv );
 	}
 
 	else {
+
+        int status;
+        pid_t mChild = wait(&status);
+        cout << "----waiting : " << msg << "----" << endl;
+
 		close(link[1]);
 
 		int nbytes = read(link[0], DisplayedBuf, MAX_DISPLAY_BUF);
