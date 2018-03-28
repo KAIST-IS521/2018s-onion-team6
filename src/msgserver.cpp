@@ -109,7 +109,8 @@ int MsgServer::JsonParsor(string msg)
         else
         {
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
-            cout << "[D] Forward to" <<  receiver_id <<  "Data:" << pgp_data <<endl;
+            cout << "[D]msgServer-> Forward to" <<  receiver_id <<  "Data:" << pgp_data;
+            cout <<endl << endl;
             this->MsgClient(nextIp,pgp_data);
             return 1;
         }
@@ -136,9 +137,7 @@ string MsgServer::PGPDecrypt(string msg)
 //
 void MsgServer::Worker(ClientSocket* client_sock)
 {
-    std::cout << "Got a client!" << std::endl;
     SocketAddress* addr = client_sock->get_sockaddr();
-    std::cout << addr->get_address() << ":" << addr->get_port() << std::endl;
     while (true)
     {
         std::string msg;
@@ -151,7 +150,6 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             this->JsonParsor(decryptedMsg);
         }
-        //std::cout << "[D]"<<msg;
     }
     delete client_sock;
     std::cout << "Client disconnected" << std::endl;
