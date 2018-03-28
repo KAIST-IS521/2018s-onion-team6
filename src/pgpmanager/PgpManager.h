@@ -38,7 +38,7 @@ public:
 	int EncryptData(char* srcFileName, char* pubKey);   // Handle msgs to send
 
 	int DecryptData(FILE* inFile);      // Handle file from peer
-	int DecryptData(string inSrc);      // Handle msgs from peer
+	int DecryptData(char* src, char* dst);      // Handle msgs from peer
 
 	int ImportMyPrivateKey(char* const  privKey);         // importing node's private key
 
@@ -56,7 +56,7 @@ private:
 
 	char DisplayedBuf[MAX_DISPLAY_BUF];
     int nbytes; // For pipe reading
-
+    char MY_PASSPHRASE [128];
 	//   const int PROPER_GPG = 1111;
 	//  const int INVALID_GPG = 0;
 	// const  char* GPG_PATH = "/usr/bin/gpg";

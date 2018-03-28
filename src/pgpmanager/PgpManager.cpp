@@ -20,6 +20,8 @@ char* const  MY_GPG_OPTION[] = {
 PgpManager::~PgpManager() {}
 
 PgpManager::PgpManager() {
+    cout <<" Enter PassPharase : " ;
+    cin >> MY_PASSPHRASE;
 	if (CheckProperGPG()) cout << "PROPER_GPG" << endl;              // proper handling needed
 	else cout << "INVALID_GPG" << endl;
 
@@ -27,7 +29,9 @@ PgpManager::PgpManager() {
     getKeyList();
 
     EncryptData("test.txt", "c6140206");
-
+    cout << "encrypt done" << endl;
+    DecryptData("test.txt.gpg", "decryptedData.txt");
+    cout << "decrypt done" << endl;
 
 }
 
@@ -73,6 +77,25 @@ void
 PgpManager::CleanDisplayedBuf() {
 	for (int i = 0; i<MAX_DISPLAY_BUF; i++)DisplayedBuf[i] = '\0';
     nbytes = 0;
+}
+
+int
+PgpManager::DecryptData(char* src, char* dst){
+    string TAG = "DECRYPT";
+    char* argv[]={
+        GPG_COMMAND,
+        "--yes",
+        "--passphrase",
+        MY_PASSPHRASE,
+        "-o",
+        dst,
+        "--decrypt",
+        src,
+        NULL
+    };
+
+    CallLocalGPG(TAG, argv);
+
 }
 
 
