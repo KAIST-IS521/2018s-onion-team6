@@ -125,6 +125,7 @@ int MsgServer::JsonParsor(string msg)
 }
 string MsgServer::PGPDecrypt(string msg)
 {
+    //return msg;
     return pgpmanager->DecryptData(msg);
 }
 //  UserInfo* myInfo;
@@ -140,8 +141,9 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             break;
         }
+        cout << "[D]MSG BEFORE DEC -> " << msg << endl;
         string decryptedMsg = this->PGPDecrypt(msg);
-        cout << " [D]PGPDEC -> "<<decryptedMsg << endl;
+        cout << " [D]MSG AFTER DEC -> " << decryptedMsg << endl;
         if(decryptedMsg!="")
         {
             this->JsonParsor(decryptedMsg);

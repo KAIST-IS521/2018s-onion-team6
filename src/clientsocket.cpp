@@ -39,7 +39,7 @@ int ClientSocket::read(std::string& msg)
     {
         return size_read;
     }
-
+    usleep(100000);
     msg.append(std::string(buffer, 0, size_read));
     size_total += size_read;
 
@@ -51,6 +51,7 @@ int ClientSocket::read(std::string& msg)
         memset(buffer, 0, BUFF_SIZE);
         size_read = recv(this->sock_fd, buffer, BUFF_SIZE, 0);
 
+        usleep(100000);
         if (size_read < 0)
         {
             break;

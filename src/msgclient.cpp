@@ -50,29 +50,39 @@ bool MsgClient::SetRoute()
     if(maxsize > 2 && maxsize < 100)
     {
         // initialize
-        for(i = 0; i < maxsize; i++) node_list[i]="";
+        for(i = 0; i <= maxsize; i++) node_list[i]="";
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
          {
             if(element.first != this->receiver && element.first != my_github_id)
             {
-                node_list[node_list_size]=element.first;
                 node_list_size++;
+                node_list[node_list_size]=element.first;
             }
         }
     cout << "[D]3" << endl;
         // randomize node list except src and dest.
-        for(i = node_list_size-1; i >=0; i--)
+        for(i = node_list_size; i >0; i--)
         {
             if(i==0)break;
             else
             {
                 j = rand() % i;
-                std::swap(node_list[i], node_list[j]);
+                if( j == 0 )
+                {
+                    continue;
+                }
+                else
+                {
+                    std::swap(node_list[i], node_list[j]);
+                }
+
             }
         }
-        rnd = rand() % (maxsize-2);
-        this->route_length =rnd+2;
-        node_list[rnd+1] = this->receiver;
+        rnd = rand() % maxsize; //3->2 가 되고 0 아니면 1이 되어야함.
+        if(rnd < 2)rnd = maxsize-1;
+        this->route_length =rnd+1; // 노드의 갯수
+        node_list[rnd] = this->receiver;
+        node_list[0] = my_github_id;
 
 //#ifdef MSGCLIENT_LOG
         for(i = 0; i < this->route_length; i++)
@@ -89,7 +99,7 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
-    string recv_ip = GetIpAddress(this->node_list[0]);
+    string recv_ip = GetIpAddress(this->node_list[1]);
     this->send_sock->Connect(recv_ip);
 
 #ifdef MSGCLIENT_LOG
@@ -126,6 +136,8 @@ string MsgClient::EncryptMsg(string data)
 
         string pub_key_id = ((UserInfo*)UserInfoMap[receiver])->GetPGPKeyId();
         data = pgpmanager->EncryptData(myInfo->GetGithubId(), pub_key_id, data);
+        if (i==2)
+            break;
         Json::Value root;
         root["sender"] = sender;
         root["receiver"] = receiver;

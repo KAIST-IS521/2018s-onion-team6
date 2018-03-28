@@ -123,6 +123,7 @@ string PgpManager::readFile(string gitId)
         while(getline(openFile, line))
         {
             data += line;
+            data += "\n";
         }
         return data;
     }
