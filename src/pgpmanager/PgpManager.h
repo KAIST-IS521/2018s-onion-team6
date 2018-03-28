@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define DEBUG_FLAG 1 
+#define DEBUG_FLAG 0 
 #define DEBUG if(DEBUG_FLAG)
 
 #define PROPER_GPG  1111
