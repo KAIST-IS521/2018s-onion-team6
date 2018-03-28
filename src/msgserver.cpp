@@ -25,6 +25,7 @@ int MsgServer::MsgClient(string ip, string msg)
     if(inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr)<=0)
     {
         cout << "ERROR" << endl;
+        close(sock);
         return -1;
     }
 

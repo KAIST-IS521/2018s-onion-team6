@@ -51,31 +51,15 @@ bool MsgClient::SetRoute()
     {
         // initialize
         for(i = 0; i < maxsize; i++) node_list[i]="";
-        cout << "[D]1" <<endl;
-        rnd = rand() % maxsize;
-        cout << "[D]2" <<endl;
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
          {
-            // except for sender, receiver
-            j++;
             if(element.first != this->receiver && element.first != my_github_id)
             {
-                if( rnd % j == 0 )
-                {
-                    continue;
-                }
-                else
-                {
-                    node_list[node_list_size]=element.first;
-                    node_list_size++;
-                }
+                node_list[node_list_size]=element.first;
+                node_list_size++;
             }
         }
     cout << "[D]3" << endl;
-    //[0] = 다음 노드 주소
-    //[마지막] = 최종 도착 노드
-    // 사이만 돌려야함
-    //
         // randomize node list except src and dest.
         for(i = node_list_size-1; i >=0; i--)
         {
@@ -86,13 +70,10 @@ bool MsgClient::SetRoute()
                 std::swap(node_list[i], node_list[j]);
             }
         }
+        rnd = rand() % (maxsize-2);
+        this->route_length =rnd+2;
+        node_list[rnd+1] = this->receiver;
 
-        cout << "[D]4" << endl;
-        // need to fix
-        node_list[node_list_size] = this->receiver;
-
-        this->route_length = node_list_size+1;
-    cout <<"[D]5" << endl;
 //#ifdef MSGCLIENT_LOG
         for(i = 0; i < this->route_length; i++)
             cout << "[D2]msgClient : node list " << node_list[i] << endl;
