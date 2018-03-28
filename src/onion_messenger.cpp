@@ -2,6 +2,7 @@
 
 UserInfo* myInfo;
 unordered_map<string, UserInfo*> UserInfoMap;
+PgpManager * pgpmanager;
 
 OnionMessenger::OnionMessenger()
 {

@@ -7,7 +7,7 @@
 #include "msgserver.h"
 #include "shell.h"
 #include "heartbeat.h"
-#include "pgp.h"
+#include "PgpManager.h"
 
 using namespace std;
 
