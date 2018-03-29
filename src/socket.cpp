@@ -164,7 +164,22 @@ int TCPSocket::Send(string data)
 int TCPSocket::Recv(size_t len)
 {
 	char buf[MAX_BUF_LEN];
-    int rv = recv(this->sd, buf, len, 0);
+
+    string recvData;
+    int rv = 0;
+    do{
+        memset(buf, 0, MAX_BUF_LEN);
+        rv= recv(this->sd, buf, len, 0);
+        if(rv >0 )
+            recvData += buf;
+        else if( rv ==0 )
+            cout <<"----------------[D]recvData : \n"<< recvData << endl;
+        else {
+            cout << "Recv failed" << endl;
+            break;
+        }
+
+    }while(rv>0);
 #ifdef SOCKER_LOG
     cout << buf << endl;
 #endif
