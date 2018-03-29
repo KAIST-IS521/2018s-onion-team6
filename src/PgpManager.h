@@ -10,6 +10,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <regex>
 
 #include "user_info.h"
 
