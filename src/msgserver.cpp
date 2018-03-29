@@ -128,8 +128,9 @@ int MsgServer::JsonParsor(string msg)
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
-            this->saveFile(github_id,pgp_data);
+            pgp_data = " [+] msg > " + pgp_data;
             cout << pgp_data << endl;
+            this->saveFile(github_id,pgp_data);
         }
         // NOT MY MESSAGE
         else
