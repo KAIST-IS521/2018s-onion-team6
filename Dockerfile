@@ -12,7 +12,7 @@ RUN mkdir /home/jff/MEMBER
 
 ########## HOME DIR SETTING #############
 RUN chown -R root:jff /home/jff
-RUN chmod -R 750 /home/jff
+RUN chmod -R 777 /home/jff
 
 
 ###### PROB  SETUP #####
