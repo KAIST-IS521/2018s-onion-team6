@@ -172,8 +172,10 @@ int TCPSocket::Recv(size_t len)
         rv= recv(this->sd, buf, len, 0);
         if(rv >0 )
             recvData += buf;
-        else if( rv ==0 )
+        else if( rv ==0 ){
+            recvData += buf;
             cout <<"----------------[D]recvData : \n"<< recvData << endl;
+        }
         else {
             cout << "Recv failed" << endl;
             break;
