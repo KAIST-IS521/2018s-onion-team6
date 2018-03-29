@@ -161,8 +161,7 @@ int TCPSocket::Send(string data)
 
 int TCPSocket::Recv(size_t len)
 {
-    char buf[MAX_BUF_LEN];
-
+	char buf[MAX_BUF_LEN];
     int rv = recv(this->sd, buf, len, 0);
 #ifdef SOCKER_LOG
     cout << buf << endl;

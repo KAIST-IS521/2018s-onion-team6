@@ -112,6 +112,7 @@ int Shell::ParseCmd()
         }
         else if (!cmd.substr(0,4).compare("exit"))
         {
+            heartbeat->SendKill();
             exit(0);
         }
         else if (!cmd.substr(0,1).compare("w"))

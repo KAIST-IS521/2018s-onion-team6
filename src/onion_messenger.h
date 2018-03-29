@@ -19,6 +19,7 @@ class OnionMessenger
         void StartApp();
 
     private:
+        Heartbeat *heartbeat;
 };
 
 #endif // ONION_MESSENGER_H
