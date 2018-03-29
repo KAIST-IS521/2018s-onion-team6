@@ -36,7 +36,7 @@ private:
     string pub_key;
     void Authentication();
     string ImportMyPrivateKey();
-    string CallLocalGPG(char* const argv[]);
+    string CallLocalGPG(string cmdData);
     string readFile(string sender);
     string saveFile(string sender, string data);
 };

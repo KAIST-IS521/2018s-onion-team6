@@ -28,8 +28,8 @@ void Shell::Login()
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     cout << "[+] Private key password > ";
-    s_pw = GetPassword();
-
+    //s_pw = GetPassword();
+    s_pw="Tkdlvj#@#846";
     private_id = s_id;
     private_pw = s_pw;
     myInfo->SetGithubId(s_id);
@@ -180,6 +180,7 @@ int Shell::cat(const string gitId)
         {
             cout<< line <<endl;
         }
+        openFile.close();
         cout << endl;
     }
     else

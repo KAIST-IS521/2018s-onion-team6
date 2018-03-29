@@ -10,14 +10,11 @@ PgpManager::PgpManager(string passwd)
 
 string PgpManager::ImportMyPrivateKey()
 {
+    string cmdData = "/usr/bin/gpg --import private.key";
 
-    char* argv[] = {
-        (char *)"gpg",
-        (char *)"--import",
-        (char *)"private.key",
-        NULL
-    };
-    string ret = CallLocalGPG(argv);
+    string ret = CallLocalGPG(cmdData);
+
+    cout <<"[D3] pgpmanager end"<<endl;
     if(ret.find("no valid OpenPGP data found") != string::npos)
     {
         cout << "[!] PRIVATE KEY IS NOT VALID" << endl;
@@ -34,28 +31,11 @@ string PgpManager::ImportMyPrivateKey()
 
 }
 
-string PgpManager::EditKey(char* key)
-{
-       char* argv[] = {
-        (char *)"gpg",
-        (char *)"--edit-key",
-        (char *)key,
-        NULL
-       };
-       return CallLocalGPG(argv);
-}
-
 string PgpManager::RecvKey(string pubKey_id)
 {
-    char* argv[] = {
-        (char *)"gpg",
-        (char *)"--keyserver",
-        (char *)"keyserver.ubuntu.com",
-        (char *)"--recv-keys",
-        (char *)pubKey_id.c_str(),
-        NULL
-    };
-    return CallLocalGPG(argv);
+    string cmdData = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";
+    cmdData += " --recv-keys " + pubKey_id;
+    return CallLocalGPG(cmdData);
 }
 
 string PgpManager::DecryptData(string data)
@@ -63,19 +43,12 @@ string PgpManager::DecryptData(string data)
     srand(time(NULL));
     string src = std::to_string(rand() % 100000000);
     string fileName = this->saveFile(src,data);
-    char* argv[]={
-        (char *)"gpg",
-        (char *)"--batch",
-        (char *)"--yes",
-        (char *)"--passphrase",
-        (char *)this->passphrase.c_str(),
-        (char *)"--output",
-        (char *)("./MEMBER/"+fileName).c_str(),
-        (char *)"--decrypt",
-        (char *)("./MEMBER/"+fileName).c_str(),
-        NULL
-    };
-    CallLocalGPG(argv);
+    string cmdData = "/usr/bin/gpg --batch --yes";
+    cmdData += " --passphrase " + this->passphrase;
+    cmdData += " --output " + fileName;
+    cmdData += " --decrypt " + fileName;
+
+    CallLocalGPG(cmdData);
     return this->readFile(fileName);
 }
 string PgpManager::saveFile(string gitId, string data)
@@ -101,7 +74,7 @@ string PgpManager::saveFile(string gitId, string data)
         cout << "[!] FILE OPEN ERROR " << gitId << endl;
         exit(0);
     }
-    return fileName;
+    return filePath;
 }
 string PgpManager::readFile(string gitId)
 {
@@ -125,6 +98,7 @@ string PgpManager::readFile(string gitId)
             data += line;
             data += "\n";
         }
+        openFile.close();
         return data;
     }
     else
@@ -137,57 +111,44 @@ string PgpManager::readFile(string gitId)
 string PgpManager::EncryptData(string sender, string pubKeyID, string data)
 {
     string fileName = this->saveFile(sender,data);
-    char* argv[]={
-        (char *)"gpg",
-        (char *)"--batch",
-        (char *)"--yes",
-        (char *)"--always-trust",
-        (char *)"--armor",
-        (char *)"-r",
-        (char *)pubKeyID.c_str(),
-        (char *)"--encrypt-files",
-        (char *)("./MEMBER/"+fileName).c_str(),
-        NULL
-    };
-    CallLocalGPG(argv);
+    string cmdData = "/usr/bin/gpg --batch --yes --always-trust --armor";
+    cmdData += " -r " + pubKeyID + " --encrypt-files " +fileName;
+    CallLocalGPG(cmdData);
     return this->readFile(fileName+".asc");
 
 }
 
 
-string PgpManager::CallLocalGPG(char* const argv[])
+string PgpManager::CallLocalGPG(string cmdData)
 {
-    int link[2];
-    char displaybuff[4096+1];
-    memset(displaybuff,0,4096);
-
-    pid_t pid;
-    pipe(link);                 // error handling needed
-    pid = fork();               // error hadnling needed
-    if (pid == 0)
+    cout << "[D]Pgp callLocalGPG " << cmdData;
+    cmdData += " 2>&1";
+    string data;
+    string line;
+    char buff[4096];
+    FILE * stream1 = popen(cmdData.c_str(),"r");
+    memset(buff,0,4096);
+    if(stream1)
     {
-        dup2(link[1], STDOUT_FILENO);
-        dup2(link[1], STDERR_FILENO);
-        close(link[0]);
-        close(link[1]);
-        execv((char *)"/usr/bin/gpg", argv);
-    }
-    else
-    {
-        int status;
-        pid_t mChild = wait(&status);
-        close(link[1]);
-        int nbytes = read(link[0], displaybuff, 4096);
-        setbuf(stdin,NULL);
-        setbuf(stdout,NULL);
-    }
 
-    return (string)displaybuff;
+        while(!feof(stream1))
+        {
+            if(fgets(buff,4096,stream1)!=NULL)
+            {
+                data.append(buff);
+                //data += "\n";
+            }
+            memset(buff,0,4096);
+        }
+        pclose(stream1);
+    }
+    cout << "[D2]Pgp callLocalGPG " << data;
+    return data;
 }
 
 
-void
-PgpManager::Authentication(){
+void PgpManager::Authentication()
+{
 
     string TAG = "Authentication";
     // auth file path handling needed
