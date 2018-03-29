@@ -159,6 +159,8 @@ int Shell::ParseCmd()
     return 0;
 }
 
+
+
 int Shell::cat(const string gitId)
 {
     string fileName=gitId;
@@ -170,8 +172,8 @@ int Shell::cat(const string gitId)
          tokenlen = fileName.find("/");
          fileName = fileName.substr(tokenlen+1);
     }
-    string filePath = "./MEMBER/" + fileName;
-    ifstream openFile(fileName.data());
+    string filePath = "./MSG/" + fileName;
+    ifstream openFile(filePath.data());
     if(openFile.is_open())
     {
         string cmd;
@@ -193,7 +195,7 @@ int Shell::cat(const string gitId)
 
 int Shell::ls()
 {
-    cout << "[D] shell::ls() "<< endl;
+    system("ls -l /home/jff/MSG/ | awk {'print $9'}");
     return 0;
 }
 

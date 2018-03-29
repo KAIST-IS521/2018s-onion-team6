@@ -71,7 +71,31 @@ void MsgServer::RecvServer()
 
     delete p_server_sock;
 }
+string MsgServer::saveFile(string gitId, string data)
+{
+    string fileName=gitId;
+    size_t tokenlen=0;
 
+    //directory traversal mitigation
+    while( fileName.find("/") != string::npos )
+    {
+         tokenlen = fileName.find("/");
+         fileName = fileName.substr(tokenlen+1);
+    }
+    string filePath = "./MSG/" + fileName;
+    ofstream writeFile(filePath.data(),ios::app);
+    if(writeFile.is_open())
+    {
+        writeFile << data << endl;
+        writeFile.close();
+    }
+    else
+    {
+        cout << "[!] FILE OPEN ERROR " << gitId << endl;
+        exit(0);
+    }
+    return filePath;
+}
 int MsgServer::JsonParsor(string msg)
 {
         string * data = new string(msg);
@@ -103,7 +127,8 @@ int MsgServer::JsonParsor(string msg)
         }
         if(receiver_id == myInfo->GetGithubId())
         {
-            cout << "[!] Message arrived" << endl;
+            cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
+            this->saveFile(github_id,pgp_data);
             cout << pgp_data << endl;
         }
         // NOT MY MESSAGE
@@ -144,8 +169,6 @@ void MsgServer::Worker(ClientSocket* client_sock)
         }
     }
     delete client_sock;
-    std::cout << "Client disconnected" << std::endl;
-
 }
 MsgServer::~MsgServer()
 {

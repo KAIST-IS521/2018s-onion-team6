@@ -8,12 +8,11 @@ RUN apt-get update
 RUN useradd -d /home/jff jff -s /bin/bash
 RUN mkdir /home/jff
 RUN mkdir /home/jff/MEMBER
-
+RUN mkdir /home/jff/MSG
 
 ########## HOME DIR SETTING #############
 RUN chown -R root:jff /home/jff
 RUN chmod -R 777 /home/jff
-
 
 ###### PROB  SETUP #####
 ADD ./BUILD/onion /home/jff/onion
