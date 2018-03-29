@@ -116,7 +116,11 @@ string PgpManager::EncryptData(string sender, string pubKeyID, string data)
     string fileName = this->saveFile(sender,data);
     string cmdData = "/usr/bin/gpg --batch --yes --always-trust --armor";
     cmdData += " -r " + pubKeyID + " --encrypt-files " +fileName;
-    CallLocalGPG(cmdData);
+    string result =  CallLocalGPG(cmdData);
+    if(result.find("public key not found")!=string::npos){
+            RecvKey(pubKeyID);
+            CallLocalGPG(cmdData);
+    }
     return this->readFile(fileName+".asc");
 
 }
