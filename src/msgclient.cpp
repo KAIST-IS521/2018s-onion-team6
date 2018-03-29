@@ -59,7 +59,6 @@ bool MsgClient::SetRoute()
                 node_list[node_list_size]=element.first;
             }
         }
-    cout << "[D]3" << endl;
         // randomize node list except src and dest.
         for(i = node_list_size; i >0; i--)
         {
@@ -84,10 +83,10 @@ bool MsgClient::SetRoute()
         node_list[rnd] = this->receiver;
         node_list[0] = my_github_id;
 
-//#ifdef MSGCLIENT_LOG
+#ifdef MSGCLIENT_LOG
         for(i = 0; i < this->route_length; i++)
             cout << "[D2]msgClient : node list " << node_list[i] << endl;
-//#endif
+#endif
     }
     else
     {
@@ -144,9 +143,9 @@ string MsgClient::EncryptMsg(string data)
         root["data"] = data;
         data = root.toStyledString();
     }
-//#ifdef MSGCLIENT_LOG
+#ifdef MSGCLIENT_LOG
     cout << data << endl;
-//#endif
+#endif
     return data;
 }
 

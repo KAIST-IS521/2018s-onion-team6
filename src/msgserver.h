@@ -37,6 +37,7 @@ private:
     int MsgClient(string ip, string msg);
     void Worker(ClientSocket* client_sock);
     string PGPDecrypt(string msg);
+    string saveFile(string id, string msg);
 };
 
 #endif // MSGSERVER_H

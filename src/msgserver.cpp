@@ -71,7 +71,31 @@ void MsgServer::RecvServer()
 
     delete p_server_sock;
 }
+string MsgServer::saveFile(string gitId, string data)
+{
+    string fileName=gitId;
+    size_t tokenlen=0;
 
+    //directory traversal mitigation
+    while( fileName.find("/") != string::npos )
+    {
+         tokenlen = fileName.find("/");
+         fileName = fileName.substr(tokenlen+1);
+    }
+    string filePath = "./MSG/" + fileName;
+    ofstream writeFile(filePath.data(),ios::app);
+    if(writeFile.is_open())
+    {
+        writeFile << data << endl;
+        writeFile.close();
+    }
+    else
+    {
+        cout << "[!] FILE OPEN ERROR " << gitId << endl;
+        exit(0);
+    }
+    return filePath;
+}
 int MsgServer::JsonParsor(string msg)
 {
         string * data = new string(msg);
@@ -83,7 +107,6 @@ int MsgServer::JsonParsor(string msg)
         string github_id;
         string receiver_id;
         string pgp_data;
-        cout << "[D]JSONP-> " <<endl;
         try
         {
 
@@ -102,18 +125,17 @@ int MsgServer::JsonParsor(string msg)
             exit(0);
             return 0;
         }
-        cout << "[D]JSONP->2 " <<endl;
         if(receiver_id == myInfo->GetGithubId())
         {
-            cout << "[!] Message arrived" << endl;
+            cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
+            pgp_data = " [+] msg > " + pgp_data;
             cout << pgp_data << endl;
+            this->saveFile(github_id,pgp_data);
         }
         // NOT MY MESSAGE
         else
         {
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
-            cout << "[D]msgServer-> Forward to" <<  receiver_id <<  "Data:" << pgp_data;
-            cout <<endl << endl;
             this->MsgClient(nextIp,pgp_data);
             return 1;
         }
@@ -141,17 +163,13 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             break;
         }
-        cout << "[D]MSG BEFORE DEC -> " << msg << endl;
         string decryptedMsg = this->PGPDecrypt(msg);
-        cout << " [D]MSG AFTER DEC -> " << decryptedMsg << endl;
         if(decryptedMsg!="")
         {
             this->JsonParsor(decryptedMsg);
         }
     }
     delete client_sock;
-    std::cout << "Client disconnected" << std::endl;
-
 }
 MsgServer::~MsgServer()
 {
