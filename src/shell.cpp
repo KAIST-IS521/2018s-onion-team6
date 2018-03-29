@@ -7,7 +7,6 @@ Shell::Shell()
 {
     Login();
     pgpmanager = new PgpManager(this->private_pw);
-
 }
 
 void Shell::Run()

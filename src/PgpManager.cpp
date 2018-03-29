@@ -148,8 +148,9 @@ bool PgpManager::Authentication()
 {   srand(time(NULL));
     string randomVal=std::to_string(rand() % 100000000);
     if(DecryptData(EncryptData("AUTH",  myInfo->GetPGPKeyId(), randomVal))==randomVal)
+    {
         return true;
+    }
     return false;
-    
 }
 
