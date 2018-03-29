@@ -5,6 +5,7 @@ PgpManager::PgpManager(string passwd)
 {
     passphrase = passwd;
     ImportMyPrivateKey();
+    if( !Authentication()) exit(0);
 }
 
 
@@ -58,8 +59,8 @@ string PgpManager::saveFile(string gitId, string data)
     //directory traversal mitigation
     while( fileName.find("/") != string::npos )
     {
-         tokenlen = fileName.find("/");
-         fileName = fileName.substr(tokenlen+1);
+        tokenlen = fileName.find("/");
+        fileName = fileName.substr(tokenlen+1);
     }
     string filePath = "./MEMBER/" + fileName;
     ofstream writeFile(filePath.data());
@@ -83,8 +84,8 @@ string PgpManager::readFile(string gitId)
     //directory traversal mitigation
     while( fileName.find("/") != string::npos )
     {
-         tokenlen = fileName.find("/");
-         fileName = fileName.substr(tokenlen+1);
+        tokenlen = fileName.find("/");
+        fileName = fileName.substr(tokenlen+1);
     }
     string filePath = "./MEMBER/" + fileName;
     ifstream openFile(filePath.data());
@@ -143,11 +144,12 @@ string PgpManager::CallLocalGPG(string cmdData)
 }
 
 
-void PgpManager::Authentication()
-{
-
-    string TAG = "Authentication";
-    // auth file path handling needed
-   // EncryptData("auth",
+bool PgpManager::Authentication()
+{   srand(time(NULL));
+    string randomVal=std::to_string(rand() % 100000000);
+    if(DecryptData(EncryptData("AUTH",  myInfo->GetPGPKeyId(), randomVal))==randomVal)
+        return true;
+    return false;
+    
 }
 
