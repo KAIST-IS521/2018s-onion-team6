@@ -147,8 +147,6 @@ int TCPSocket::Send(string data)
     const char *c_data = data.c_str();
     int len = data.length();
 
-    if(len > MAX_TCP_BUF_SIZE)
-        len = MAX_TCP_BUF_SIZE;
 #ifdef SOCKER_LOG
     cout << data << endl;
 #endif

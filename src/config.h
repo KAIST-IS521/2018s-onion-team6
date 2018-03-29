@@ -11,7 +11,6 @@
 #define MSG_SERVER_PORT 8888
 
 #define MAX_UDP_BUF_SIZE 1024
-#define MAX_TCP_BUF_SIZE 1024
 
 #define PRIVATEKEY_PATH "./private.key"
 
