@@ -5,7 +5,7 @@ PgpManager::PgpManager(string passwd)
 {
     passphrase = passwd;
     ImportMyPrivateKey();
-    randomVal = srand(time(NULL));
+    if( !Authentication()) exit(0);
 }
 
 
@@ -145,11 +145,9 @@ string PgpManager::CallLocalGPG(string cmdData)
 
 
 bool PgpManager::Authentication()
-{
-    // auth file path handling needed
-    // EncryptData("auth"
-
-    if(DecryptData(encryptData("AUTH",  myInfo->GetPGPKeyId(key_id), randomVal)) == randomVal)
+{   srand(time(NULL));
+    string randomVal=std::to_string(rand() % 100000000);
+    if(DecryptData(EncryptData("AUTH",  myInfo->GetPGPKeyId(), randomVal))==randomVal)
         return true;
     return false;
     

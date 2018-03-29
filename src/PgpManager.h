@@ -39,7 +39,6 @@ private:
     string CallLocalGPG(string cmdData);
     string readFile(string sender);
     string saveFile(string sender, string data);
-    string randomVal;
 };
 
 
