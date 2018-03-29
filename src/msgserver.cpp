@@ -83,7 +83,6 @@ int MsgServer::JsonParsor(string msg)
         string github_id;
         string receiver_id;
         string pgp_data;
-        cout << "[D]JSONP-> " <<endl;
         try
         {
 
@@ -102,7 +101,6 @@ int MsgServer::JsonParsor(string msg)
             exit(0);
             return 0;
         }
-        cout << "[D]JSONP->2 " <<endl;
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] Message arrived" << endl;
@@ -112,8 +110,6 @@ int MsgServer::JsonParsor(string msg)
         else
         {
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
-            cout << "[D]msgServer-> Forward to" <<  receiver_id <<  "Data:" << pgp_data;
-            cout <<endl << endl;
             this->MsgClient(nextIp,pgp_data);
             return 1;
         }
@@ -141,9 +137,7 @@ void MsgServer::Worker(ClientSocket* client_sock)
         {
             break;
         }
-        cout << "[D]MSG BEFORE DEC -> " << msg << endl;
         string decryptedMsg = this->PGPDecrypt(msg);
-        cout << " [D]MSG AFTER DEC -> " << decryptedMsg << endl;
         if(decryptedMsg!="")
         {
             this->JsonParsor(decryptedMsg);

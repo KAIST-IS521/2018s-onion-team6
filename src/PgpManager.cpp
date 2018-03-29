@@ -14,7 +14,6 @@ string PgpManager::ImportMyPrivateKey()
 
     string ret = CallLocalGPG(cmdData);
 
-    cout <<"[D3] pgpmanager end"<<endl;
     if(ret.find("no valid OpenPGP data found") != string::npos)
     {
         cout << "[!] PRIVATE KEY IS NOT VALID" << endl;
@@ -121,7 +120,6 @@ string PgpManager::EncryptData(string sender, string pubKeyID, string data)
 
 string PgpManager::CallLocalGPG(string cmdData)
 {
-    cout << "[D]Pgp callLocalGPG " << cmdData;
     cmdData += " 2>&1";
     string data;
     string line;
@@ -130,7 +128,6 @@ string PgpManager::CallLocalGPG(string cmdData)
     memset(buff,0,4096);
     if(stream1)
     {
-
         while(!feof(stream1))
         {
             if(fgets(buff,4096,stream1)!=NULL)
@@ -142,7 +139,6 @@ string PgpManager::CallLocalGPG(string cmdData)
         }
         pclose(stream1);
     }
-    cout << "[D2]Pgp callLocalGPG " << data;
     return data;
 }
 
