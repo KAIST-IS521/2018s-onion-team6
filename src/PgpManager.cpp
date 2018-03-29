@@ -5,7 +5,10 @@ PgpManager::PgpManager(string passwd)
 {
     passphrase = passwd;
     ImportMyPrivateKey();
-    if( !Authentication()) exit(0);
+    if( !Authentication())
+    {
+        exit(0);
+    }
 }
 
 
@@ -145,12 +148,15 @@ string PgpManager::CallLocalGPG(string cmdData)
 
 
 bool PgpManager::Authentication()
-{   srand(time(NULL));
-    string randomVal=std::to_string(rand() % 100000000);
-    if(DecryptData(EncryptData("AUTH",  myInfo->GetPGPKeyId(), randomVal))==randomVal)
+{
+    if(DecryptData(EncryptData("AUTH",myInfo->GetPGPKeyId(),"CLEAR")).find("CLEAR")!= string::npos)
     {
         return true;
     }
-    return false;
+    else
+    {
+        cout << "PASSPRASE IS NOT MATCHED" <<endl;
+        return false;
+    }
 }
 

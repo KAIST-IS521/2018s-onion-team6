@@ -28,8 +28,7 @@ void Shell::Login()
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     cout << "[+] Private key password > ";
-    //s_pw = GetPassword();
-    s_pw="Tkdlvj#@#846";
+    s_pw = GetPassword();
     private_id = s_id;
     private_pw = s_pw;
     myInfo->SetGithubId(s_id);
