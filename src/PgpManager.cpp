@@ -6,7 +6,6 @@ PgpManager::PgpManager(string passwd)
     passphrase = passwd;
     ImportMyPrivateKey();
     randomVal = srand(time(NULL));
-     encryptData("AUTH",  myInfo->GetPGPKeyId(key_id), randomVal);
 }
 
 
