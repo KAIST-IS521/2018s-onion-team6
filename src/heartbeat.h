@@ -12,7 +12,6 @@
 #include "config.h"
 #include "socket.h"
 #include "user_info.h"
-#include "onion_messenger.h"
 
 using namespace std;
 
@@ -26,14 +25,15 @@ class Heartbeat
         ~Heartbeat();
 
         void Start();
+        void SendKill();
 
     private:
-        UDPSocket* send_sock;
-        UDPSocket* recv_sock;
+        //UDPSocket* send_sock;
+        //UDPSocket* recv_sock;
 
-        int Initialize();
-        int CreateSocket();
-        int SetSocket();
+        //int Initialize();
+        //int CreateSocket();
+        //int SetSocket();
         void SendBroadcast();
         void RecvBroadcast();
 };

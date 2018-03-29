@@ -4,7 +4,7 @@ Heartbeat::Heartbeat()
 {
     //Initialize();
 }
-
+/*
 int Heartbeat::Initialize()
 {
     CreateSocket();
@@ -15,7 +15,8 @@ int Heartbeat::Initialize()
 int Heartbeat::CreateSocket()
 {
     this->send_sock = new UDPSocket();
-    this->recv_sock = new UDPSocket();
+    //this->recv_sock = new UDPSocket();
+    cout << this->send_sock << endl;
     return 0;
 }
 
@@ -26,17 +27,18 @@ int Heartbeat::SetSocket()
 
     // set socket option
     this->send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    //this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
 
     // bind socket addr
-    this->send_sock->Bind(HEARTBEAT_SEND_PORT);
-    this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
+    this->send_sock->Bind(9999);
+    //this->send_sock->Bind(HEARTBEAT_SEND_PORT);
+    //this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
 
     // set send socket's dest addr
     this->send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
     return 0;
 }
-
+*/
 void Heartbeat::Start()
 {
     // start threads sending and recving BC msg
@@ -51,10 +53,15 @@ void Heartbeat::SendBroadcast()
     int broadcast = 1;
     const char *broadcast_addr = "255.255.255.255";
 
-    this->send_sock = new UDPSocket();
-    this->send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    this->send_sock->Bind(HEARTBEAT_SEND_PORT);
-    this->send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
+    UDPSocket* send_sock;
+    send_sock = new UDPSocket();
+    send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    send_sock->Bind(HEARTBEAT_SEND_PORT);
+    send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
+//    this->send_sock = new UDPSocket();
+//    this->send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+//    this->send_sock->Bind(HEARTBEAT_SEND_PORT);
+//    this->send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
 
     int rv = 0;
     std::chrono::seconds period(BROADCAST_PERIOD);
@@ -67,7 +74,8 @@ void Heartbeat::SendBroadcast()
         root["github_id"] = myInfo->GetGithubId();
         root["pgp_key_id"] = myInfo->GetPGPKeyId();
 
-        rv = this->send_sock->Send(root.toStyledString());
+        //rv = this->send_sock->Send(root.toStyledString());
+        rv = send_sock->Send(root.toStyledString());
         if (rv > 0)
 #ifdef HEARTBEAT_LOG
           cout << "Send Broadcast" << endl;
@@ -80,16 +88,22 @@ void Heartbeat::SendBroadcast()
 void Heartbeat::RecvBroadcast()
 {
     int broadcast = 1;
-    this->recv_sock = new UDPSocket();
-    this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
+    UDPSocket *recv_sock = new UDPSocket();
+    recv_sock = new UDPSocket();
+    recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    recv_sock->Bind(HEARTBEAT_RECV_PORT);
+
+//    this->recv_sock = new UDPSocket();
+//    this->recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+//    this->recv_sock->Bind(HEARTBEAT_RECV_PORT);
 
     string *data;
 
     while(1)
     {
         // recv data
-        data = this->recv_sock->Recv();
+        //data = this->recv_sock->Recv();
+        data = recv_sock->Recv();
 #ifdef HEARTBEAT_LOG
         cout << "Recv Broadcast" << endl;
 #endif
@@ -154,5 +168,23 @@ void Heartbeat::RecvBroadcast()
 #endif
         }
     }
+}
+
+void Heartbeat::SendKill()
+{
+    int broadcast = 1;
+    const char *broadcast_addr = "255.255.255.255";
+
+    UDPSocket* send_sock = new UDPSocket();
+    send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    send_sock->Bind(HEARTBEAT_KILL_PORT);
+    send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
+
+    // make data to json format
+    Json::Value root;
+    root["flag"] = 0;
+    root["github_id"] = myInfo->GetGithubId();
+    root["pgp_key_id"] = myInfo->GetPGPKeyId();
+    send_sock->Send(root.toStyledString());
 }
 

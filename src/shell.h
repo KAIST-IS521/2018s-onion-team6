@@ -11,12 +11,15 @@
 #include "msgserver.h"
 #include "msgclient.h"
 #include "PgpManager.h"
+#include "heartbeat.h"
 
 using namespace std;
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
 extern PgpManager *pgpmanager;
+extern Heartbeat *heartbeat;
+
 class Shell
 {
     public:

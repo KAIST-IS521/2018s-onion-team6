@@ -2,7 +2,8 @@
 
 UserInfo* myInfo;
 unordered_map<string, UserInfo*> UserInfoMap;
-PgpManager * pgpmanager;
+PgpManager *pgpmanager;
+Heartbeat *heartbeat;
 
 OnionMessenger::OnionMessenger()
 {
@@ -17,8 +18,12 @@ void OnionMessenger::StartApp()
     MsgServer * msgserver = new MsgServer();
     msgserver->Start();
 
-    Heartbeat *heartbeat = new Heartbeat();
+    heartbeat = new Heartbeat();
     heartbeat->Start();
 
     shell->Run();
+}
+
+OnionMessenger::~OnionMessenger()
+{
 }
