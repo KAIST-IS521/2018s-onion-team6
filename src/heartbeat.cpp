@@ -123,6 +123,13 @@ void Heartbeat::RecvBroadcast()
         Json::Value j_github_id = root["github_id"];
         Json::Value j_pgp_key_id = root["pgp_key_id"];
 
+        if(j_flag.isNull() || j_github_id.isNull() || j_pgp_key_id.isNull())
+        {
+
+            cout << "[!]INVALID JSON FORMAT " << endl;
+            continue;
+        }
+
         // cast json data
         int flag = j_flag.asInt();
         string github_id = j_github_id.asCString();

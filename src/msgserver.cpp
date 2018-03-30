@@ -115,7 +115,11 @@ int MsgServer::JsonParsor(string msg)
         Json::Value j_sender    = root["sender"];
         Json::Value j_receiver  = root["receiver"];
         Json::Value j_data      = root["data"];
-
+        if(j_sender.isNull() || j_receiver.isNull() || j_data.isNull())
+        {
+            cout << "INVALID JSON FORMAT" << endl;
+            return 0;
+        }
         github_id    = j_sender.asCString();
         receiver_id  = j_receiver.asCString();
         pgp_data     = j_data.asCString();
