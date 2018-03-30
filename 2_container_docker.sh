@@ -9,6 +9,6 @@ SHARED=
 ## FINAL VERSION
 OPTION="--rm"
 
-sudo docker run --name $CONTAINER_NAME $PORT -i -t -d $SHRED $OPTION $IMAGE_NAME:1.0 /bin/bash
+sudo docker run --name $CONTAINER_NAME $PORT -i -t -d $SHRED $OPTION $IMAGE_NAME:1.0 /home/jff/onion
 
 sudo docker attach $CONTAINER_NAME
