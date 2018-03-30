@@ -124,6 +124,9 @@ void Heartbeat::RecvBroadcast()
         string github_id = j_github_id.asCString();
         string pgp_key_id = j_pgp_key_id.asCString();
 
+        if(hackDetector(pgp_key_id))
+            continue;
+
         // process data
         if(flag) // live Client
         {
@@ -186,5 +189,22 @@ void Heartbeat::SendKill()
     root["github_id"] = myInfo->GetGithubId();
     root["pgp_key_id"] = myInfo->GetPGPKeyId();
     send_sock->Send(root.toStyledString());
+}
+
+
+
+int Heartbeat::hackDetector(string v1)
+{
+    std::regex reg("[^a-zA-Z0-9]*");
+    smatch match;
+    if(regex_match(v1, match, reg))
+    {
+        cout << "HACK DETECTION" << endl;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 

@@ -24,7 +24,7 @@ public:
     PgpManager(string passwd);
     ~PgpManager();
 
-    string EncryptData(string sender, string  pubKey, string data);
+    string EncryptData(string  pubKey, string data);
     string DecryptData(string dst);
 
     string RecvKey(string pubKey);

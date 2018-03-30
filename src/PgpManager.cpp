@@ -47,8 +47,8 @@ string PgpManager::DecryptData(string data)
     string src = std::to_string(rand() % 100000000);
     string fileName = this->saveFile(src,data);
     string cmdData = "/usr/bin/gpg --batch --yes";
-    cmdData += " --passphrase " + this->passphrase;
-    cmdData += " --output " + fileName;
+    cmdData += " --passphrase \"" + this->passphrase;
+    cmdData += "\" --output " + fileName;
     cmdData += " --decrypt " + fileName;
 
     CallLocalGPG(cmdData);
@@ -111,9 +111,10 @@ string PgpManager::readFile(string gitId)
     }
     return "";
 }
-string PgpManager::EncryptData(string sender, string pubKeyID, string data)
+string PgpManager::EncryptData(string pubKeyID, string data)
 {
-    string fileName = this->saveFile(sender,data);
+    string src = std::to_string(rand() % 100000000);
+    string fileName = this->saveFile(src,data);
     string cmdData = "/usr/bin/gpg --batch --yes --always-trust --armor";
     cmdData += " -r " + pubKeyID + " --encrypt-files " +fileName;
     string result =  CallLocalGPG(cmdData);
@@ -153,7 +154,7 @@ string PgpManager::CallLocalGPG(string cmdData)
 
 bool PgpManager::Authentication()
 {
-    if(DecryptData(EncryptData("AUTH",myInfo->GetPGPKeyId(),"CLEAR")).find("CLEAR")!= string::npos)
+    if(DecryptData(EncryptData(myInfo->GetPGPKeyId(),"CLEAR")).find("CLEAR")!= string::npos)
     {
         return true;
     }
@@ -163,4 +164,3 @@ bool PgpManager::Authentication()
         return false;
     }
 }
-

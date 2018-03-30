@@ -7,6 +7,7 @@
 #include <chrono>
 #include <unistd.h>
 #include <unordered_map>
+#include <regex>
 
 #include "json/json.h"
 #include "config.h"
@@ -36,6 +37,7 @@ class Heartbeat
         //int SetSocket();
         void SendBroadcast();
         void RecvBroadcast();
+        int hackDetector(string v1);
 };
 
 #endif // HEARTBEAT_H
