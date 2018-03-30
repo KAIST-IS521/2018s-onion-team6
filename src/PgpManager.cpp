@@ -10,7 +10,20 @@ PgpManager::PgpManager(string passwd)
         exit(0);
     }
 }
-
+int PgpManager::hackDetector(string v1)
+{
+    std::regex reg("[^a-zA-Z0-9]*");
+    smatch match;
+    if(regex_match(v1, match, reg))
+    {
+        cout << "HACK DETECTION" << endl;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 string PgpManager::ImportMyPrivateKey()
 {
@@ -28,6 +41,10 @@ string PgpManager::ImportMyPrivateKey()
     {
         string keys="gpg: key ";
         string key_id = ret.substr((ret.find(keys))+keys.length(),8);
+        if(hackDetector(key_id))
+        {
+            exit(0);
+        }
         myInfo->SetPGPKeyId(key_id);
     }
     return ret;

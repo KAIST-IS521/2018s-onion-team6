@@ -113,7 +113,11 @@ void Heartbeat::RecvBroadcast()
         Json::CharReaderBuilder builder;
         Json::CharReader * reader = builder.newCharReader();
         reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
-
+        if(errs.find("error") !=string::npos)
+        {
+            cout << "Not Json Format" << endl;
+            continue;
+        }
         // get json data
         Json::Value j_flag = root["flag"];
         Json::Value j_github_id = root["github_id"];

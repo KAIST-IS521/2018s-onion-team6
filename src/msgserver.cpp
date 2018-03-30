@@ -20,7 +20,7 @@ int MsgServer::MsgClient(string ip, string msg)
     memset(&serv_addr, '0', sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(8888);
+    serv_addr.sin_port = htons(SERVER_SOCK);
 
     if(inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr)<=0)
     {
@@ -48,7 +48,7 @@ void MsgServer::Start()
 }
 void MsgServer::RecvServer()
 {
-    p_server_sock = new ServerSocket(8888);
+    p_server_sock = new ServerSocket(SERVER_SOCK);
     int err = p_server_sock->listen();
     if (err != 0)
     {
@@ -91,15 +91,13 @@ string MsgServer::saveFile(string gitId, string data)
     }
     else
     {
-        cout << "[!] FILE OPEN ERROR " << gitId << endl;
+        cout << "[!] FILE OPEN ERROR " << filePath << endl;
         exit(0);
     }
     return filePath;
 }
 int MsgServer::JsonParsor(string msg)
 {
-        string * data = new string(msg);
-
         JSONCPP_STRING errs;
         Json::Value root;
         Json::CharReaderBuilder builder;
@@ -108,7 +106,7 @@ int MsgServer::JsonParsor(string msg)
         string receiver_id;
         string pgp_data;
 
-        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+        reader->parse(msg.c_str(), msg.c_str()+msg.length(), &root, &errs);
         if(errs.find("error") != string::npos)
         {
             cout << "Not JSON Format" << endl;
@@ -135,9 +133,6 @@ int MsgServer::JsonParsor(string msg)
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
             this->MsgClient(nextIp,pgp_data);
         }
-
-    delete data;
-    data = NULL;
     return 1;
 
 }

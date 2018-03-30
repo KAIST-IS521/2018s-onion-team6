@@ -19,4 +19,6 @@
 #define MAX_BUF_LEN 1024
 #define MAX_SEND_LEN 1024
 
+
+#define SERVER_SOCK 8888
 #endif // CONFIG_H

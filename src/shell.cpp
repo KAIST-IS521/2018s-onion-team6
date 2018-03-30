@@ -142,12 +142,12 @@ int Shell::ParseCmd()
             prompt.clear();
             push_list(" # ");
             cout << endl;
-            delete msg_client;
         }
         else
         {
             msg_client = new MsgClient(this->receiver, msg);
             msg_client->Start();
+            delete msg_client;
         }
     }
     else
