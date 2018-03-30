@@ -151,7 +151,6 @@ string MsgClient::EncryptMsg(string data)
 
 MsgClient::~MsgClient()
 {
-
 }
 
 string MsgClient::GetIpAddress(string github_id)

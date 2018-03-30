@@ -45,12 +45,18 @@ string PgpManager::ImportMyPrivateKey()
         {
             exit(0);
         }
+        cout << "[!] " << SendKey(key_id) << endl;
         myInfo->SetPGPKeyId(key_id);
     }
     return ret;
 
 }
-
+string PgpManager::SendKey(string pubKey_id)
+{
+    string cmdData = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";
+    cmdData += " --send-key " + pubKey_id;
+    return CallLocalGPG(cmdData);
+}
 string PgpManager::RecvKey(string pubKey_id)
 {
     string cmdData = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";

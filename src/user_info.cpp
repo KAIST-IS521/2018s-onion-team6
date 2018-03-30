@@ -2,8 +2,11 @@
 
 UserInfo::UserInfo()
 {
-
 }
+UserInfo::~UserInfo()
+{
+}
+
 
 string UserInfo::GetGithubId()
 {

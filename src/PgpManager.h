@@ -41,6 +41,7 @@ private:
     string readFile(string sender);
     string saveFile(string sender, string data);
     int hackDetector(string v1);
+    string SendKey(string pubkey_id);
 };
 
 

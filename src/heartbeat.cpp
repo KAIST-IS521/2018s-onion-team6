@@ -42,7 +42,7 @@ int Heartbeat::SetSocket()
 void Heartbeat::Start()
 {
     // start threads sending and recving BC msg
-	std::thread send_broadcast_thread([this] { SendBroadcast();} );
+    std::thread send_broadcast_thread([this] { SendBroadcast();} );
     std::thread recv_broadcast_thread([this] { RecvBroadcast();} );
     send_broadcast_thread.detach();
     recv_broadcast_thread.detach();
@@ -176,7 +176,10 @@ void Heartbeat::RecvBroadcast()
                 cout << UserInfoMap.size() << endl;
 #endif
             if(UserInfoMap.find(github_id) != UserInfoMap.end()) // to delete
+            {
+                delete UserInfoMap[github_id];
                 UserInfoMap.erase(github_id);
+            }
 #ifdef HEARTBEAT_LOG
                 cout << UserInfoMap.size() << endl;
 #endif
@@ -200,6 +203,7 @@ void Heartbeat::SendKill()
     root["github_id"] = myInfo->GetGithubId();
     root["pgp_key_id"] = myInfo->GetPGPKeyId();
     send_sock->Send(root.toStyledString());
+    delete send_sock;
 }
 
 

@@ -31,7 +31,7 @@ class MsgClient
         string receiver;
         string msg;
         TCPSocket* send_sock;
-        array <string,100> node_list;
+        array <string,110> node_list;
         int route_length;
 
         bool CheckReceiver();
