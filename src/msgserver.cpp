@@ -107,24 +107,21 @@ int MsgServer::JsonParsor(string msg)
         string github_id;
         string receiver_id;
         string pgp_data;
-        try
-        {
 
-            reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
-            Json::Value j_sender    = root["sender"];
-            Json::Value j_receiver  = root["receiver"];
-            Json::Value j_data      = root["data"];
-
-            github_id    = j_sender.asCString();
-            receiver_id  = j_receiver.asCString();
-            pgp_data     = j_data.asCString();
-        }
-        catch (int exceptionCode)
+        reader->parse(data[0].c_str(), data[0].c_str()+data[0].length(), &root, &errs);
+        if(errs.find("error") != string::npos)
         {
-            cout << "[-]JSON PROTOCOL IS BROKEN" <<endl;
-            exit(0);
+            cout << "Not JSON Format" << endl;
             return 0;
         }
+        Json::Value j_sender    = root["sender"];
+        Json::Value j_receiver  = root["receiver"];
+        Json::Value j_data      = root["data"];
+
+        github_id    = j_sender.asCString();
+        receiver_id  = j_receiver.asCString();
+        pgp_data     = j_data.asCString();
+
         if(receiver_id == myInfo->GetGithubId())
         {
             cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
@@ -137,12 +134,11 @@ int MsgServer::JsonParsor(string msg)
         {
             string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
             this->MsgClient(nextIp,pgp_data);
-            return 1;
         }
 
     delete data;
     data = NULL;
-    return 0;
+    return 1;
 
 }
 string MsgServer::PGPDecrypt(string msg)
