@@ -151,7 +151,6 @@ int Shell::ParseCmd()
             prompt.clear();
             push_list(" # ");
             cout << endl;
-            delete msg_client;
         }
         else
         {
