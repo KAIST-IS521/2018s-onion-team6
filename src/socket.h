@@ -1,12 +1,12 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<unistd.h>
-#include<cstring>
-#include<iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <cstring>
+#include <iostream>
 
 #include "config.h"
 

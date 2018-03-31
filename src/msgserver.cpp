@@ -1,13 +1,43 @@
 #include "msgserver.h"
 
+MsgServer::MsgServer(){}
 
-MsgServer::MsgServer()
+void MsgServer::Start()
 {
-
+    // start threads recving msg
+    std::thread serverRun([this] { RecvServer();});
+    serverRun.detach();
 }
+
+void MsgServer::RecvServer()
+{
+    // Create socket and listen
+    p_server_sock = new ServerSocket(SERVER_SOCK);
+    int err = p_server_sock->listen();
+    if (err != 0)
+    {
+        std::cout << strerror(err) << std::endl;
+        exit(err);
+    }
+
+    while (true)
+    {
+        p_client_sock = p_server_sock->accept();
+        if (!p_client_sock->valid())
+        {
+            delete p_client_sock;
+            continue;
+        }
+        std::thread acceptRun([this] { Worker(p_client_sock);});
+        acceptRun.detach();
+    }
+
+    delete p_server_sock;
+}
+
+
 int MsgServer::MsgClient(string ip, string msg)
 {
-
     struct sockaddr_in address;
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
@@ -41,61 +71,34 @@ int MsgServer::MsgClient(string ip, string msg)
     }
 return 1;
 }
-void MsgServer::Start()
-{
-   std::thread serverRun([this] { RecvServer();});
-   serverRun.detach();
-}
-void MsgServer::RecvServer()
-{
-    p_server_sock = new ServerSocket(SERVER_SOCK);
-    int err = p_server_sock->listen();
-    if (err != 0)
-    {
-        std::cout << strerror(err) << std::endl;
-        exit(err);
-    }
 
-    while (true)
-    {
-        p_client_sock = p_server_sock->accept();
-        if (!p_client_sock->valid())
-        {
-            delete p_client_sock;
-            continue;
-        }
-        std::thread acceptRun([this] { Worker(p_client_sock);});
-        acceptRun.detach();
-
-    }
-
-    delete p_server_sock;
-}
-string MsgServer::saveFile(string gitId, string data)
+string MsgServer::SaveFile(string file_name, string data)
 {
-    string fileName=gitId;
     size_t tokenlen=0;
 
-    //directory traversal mitigation
-    while( fileName.find("/") != string::npos )
+    // directory traversal mitigation
+    while( file_name.find("/") != string::npos )
     {
-         tokenlen = fileName.find("/");
-         fileName = fileName.substr(tokenlen+1);
+         tokenlen = file_name.find("/");
+         file_name = file_name.substr(tokenlen+1);
     }
-    string filePath = "./MSG/" + fileName;
-    ofstream writeFile(filePath.data(),ios::app);
-    if(writeFile.is_open())
+    string file_path = "./MSG/" + file_name;
+
+    // add data
+    ofstream write_file(file_path.data(), ios::app);
+    if(write_file.is_open())
     {
-        writeFile << data << endl;
-        writeFile.close();
+        write_file << data << endl;
+        write_file.close();
     }
     else
     {
-        cout << "[!] FILE OPEN ERROR " << filePath << endl;
+        cout << "[Error!] File open error " << file_path << endl;
         exit(0);
     }
-    return filePath;
+    return file_path;
 }
+
 int MsgServer::JsonParsor(string msg)
 {
         JSONCPP_STRING errs;
@@ -109,7 +112,7 @@ int MsgServer::JsonParsor(string msg)
         reader->parse(msg.c_str(), msg.c_str()+msg.length(), &root, &errs);
         if(errs.find("error") != string::npos)
         {
-            cout << "Not JSON Format" << endl;
+            cout << "[Error!] Not JSON Format" << endl;
             return 0;
         }
         Json::Value j_sender    = root["sender"];
@@ -117,7 +120,7 @@ int MsgServer::JsonParsor(string msg)
         Json::Value j_data      = root["data"];
         if(j_sender.isNull() || j_receiver.isNull() || j_data.isNull())
         {
-            cout << "INVALID JSON FORMAT" << endl;
+            cout << "[Error!] Invalid Json Fromat" << endl;
             return 0;
         }
         github_id    = j_sender.asCString();
@@ -129,7 +132,7 @@ int MsgServer::JsonParsor(string msg)
             cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
             pgp_data = " [+] msg > " + pgp_data;
             cout << pgp_data << endl;
-            this->saveFile(github_id,pgp_data);
+            this->SaveFile(github_id,pgp_data);
         }
         // NOT MY MESSAGE
         else
@@ -142,12 +145,9 @@ int MsgServer::JsonParsor(string msg)
 }
 string MsgServer::PGPDecrypt(string msg)
 {
-    //return msg;
     return pgpmanager->DecryptData(msg);
 }
-//  UserInfo* myInfo;
-//  4 unordered_map<string, UserInfo*> UserInfoMap;
-//
+
 void MsgServer::Worker(ClientSocket* client_sock)
 {
     SocketAddress* addr = client_sock->get_sockaddr();
