@@ -11,7 +11,7 @@
 #include "serversocket.h"
 #include "clientsocket.h"
 #include "user_info.h"
-#include "PgpManager.h"
+#include "pgpmanager.h"
 
 #include "json/json.h"
 
