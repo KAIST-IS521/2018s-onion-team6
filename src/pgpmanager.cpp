@@ -37,9 +37,9 @@ string PgpManager::ImportMyPrivateKey()
 string PgpManager::RecvKey(string pub_key_id)
 {
     // execute recv key command
-    string cmdData = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";
-    cmdData += " --recv-keys " + pub_key_id;
-    return CallLocalGPG(cmdData);
+    string cmd_data = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";
+    cmd_data += " --recv-keys " + pub_key_id;
+    return CallLocalGPG(cmd_data);
 }
 
 string PgpManager::DecryptData(string data)
@@ -47,17 +47,17 @@ string PgpManager::DecryptData(string data)
     // set random file name
     srand(time(NULL));
     string src = std::to_string(rand() % 100000000);
-    string file_name = this->saveFile(src, data);
+    string file_name = this->SaveFile(src, data);
 
     // execute decrypt command
-    string cmdData = "/usr/bin/gpg --batch --yes";
-    cmdData += " --passphrase \"" + this->passphrase;
-    cmdData += "\" --output " + fileName;
-    cmdData += " --decrypt " + fileName;
-    CallLocalGPG(cmdData);
+    string cmd_data = "/usr/bin/gpg --batch --yes";
+    cmd_data += " --passphrase \"" + this->passphrase;
+    cmd_data += "\" --output " + file_name;
+    cmd_data += " --decrypt " + file_name;
+    CallLocalGPG(cmd_data);
 
     // return decrypt result
-    return this->readFile(file_name);
+    return this->ReadFile(file_name);
 }
 
 string PgpManager::SaveFile(string file_name, string data)
@@ -73,11 +73,11 @@ string PgpManager::SaveFile(string file_name, string data)
     string file_path = "./MEMBER/" + file_name;
 
     // open file and write data
-    ofstream writeFile(file_path.data());
-    if(writeFile.is_open())
+    ofstream write_file(file_path.data());
+    if(write_file.is_open())
     {
-        writeFile << data;
-        writeFile.close();
+        write_file << data;
+        write_file.close();
     }
     else
     {
@@ -100,17 +100,17 @@ string PgpManager::ReadFile(string file_name)
     string file_path = "./MEMBER/" + file_name;
 
     // open file and read data
-    ifstream openFile(filePath.data());
-    if(openFile.is_open())
+    ifstream open_file(file_path.data());
+    if(open_file.is_open())
     {
         string data = "";
         string line;
-        while(getline(openFile, line))
+        while(getline(open_file, line))
         {
             data += line;
             data += "\n";
         }
-        openFile.close();
+        open_file.close();
         return data;
     }
     else

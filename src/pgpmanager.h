@@ -12,6 +12,7 @@
 #include <regex>
 
 #include "user_info.h"
+#include "config.h"
 
 using namespace std;
 extern UserInfo * myInfo;
