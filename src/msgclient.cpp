@@ -9,18 +9,20 @@ MsgClient::MsgClient(string receiver, string msg)
 
 void MsgClient::Start()
 {
+    // Check if receiver exists
     if (CheckReceiver())
     {
 #ifdef MSGCLIENT_LOG
         cout << "Find a client" << endl;
 #endif
+        // Set route and send msg
         if(SetRoute())
         {
             SendMsg();
         }
         else
         {
-            cout << "Fail to set route" << endl;
+            cout << "[Error!] Fail to set route" << endl;
         }
     }
     else
@@ -33,6 +35,7 @@ void MsgClient::Start()
 
 bool MsgClient::CheckReceiver()
 {
+    // Find receiver in peer list
     if(UserInfoMap.find(this->receiver) == UserInfoMap.end())
         return false;
     return true;
@@ -40,10 +43,11 @@ bool MsgClient::CheckReceiver()
 
 bool MsgClient::SetRoute()
 {
-    int i=0, j= 0;
-    int node_list_size  = 0;
-    int rnd             = 0;
-    int maxsize         = UserInfoMap.size();
+    int i = 0, j = 0;
+    int node_list_size = 0; // node list index
+    int rnd = 0; // # of routes
+    int maxsize = UserInfoMap.size(); // # of clients
+
     string my_github_id = myInfo->GetGithubId();
 
     srand(time(NULL));
@@ -53,16 +57,17 @@ bool MsgClient::SetRoute()
         for(i = 0; i <= maxsize; i++) node_list[i]="";
         for(std::pair<std::string, UserInfo*> element : UserInfoMap)
          {
+            // set node list except src and dst
             if(element.first != this->receiver && element.first != my_github_id)
             {
                 node_list_size++;
                 node_list[node_list_size]=element.first;
             }
         }
-        // randomize node list except src and dest.
+        // randomize node list except src and dst
         for(i = node_list_size; i >0; i--)
         {
-            if(i==0)break;
+            if(i==0) break;
             else
             {
                 j = rand() % i;
@@ -77,11 +82,14 @@ bool MsgClient::SetRoute()
 
             }
         }
-        rnd = rand() % maxsize; //3->2 가 되고 0 아니면 1이 되어야함.
-        if(rnd < 2)rnd = maxsize-1;
-        this->route_length =rnd+1; // 노드의 갯수
-        node_list[rnd] = this->receiver;
-        node_list[0] = my_github_id;
+        // Set # of routes randomly
+        rnd = rand() % maxsize;
+        if(rnd < 2) rnd = maxsize-1;
+
+        this->route_length = rnd + 1; // route length
+
+        node_list[rnd] = this->receiver; // set receiver
+        node_list[0] = my_github_id; // set sender
 
 #ifdef MSGCLIENT_LOG
         for(i = 0; i < this->route_length; i++)
@@ -90,7 +98,7 @@ bool MsgClient::SetRoute()
     }
     else
     {
-        cout << "NODE ARE NOT EHOUGH" << endl;
+        cout << "[Error!] Node are not enough" << endl;
         return false;
     }
     return true;
@@ -98,6 +106,7 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
+    // Set receiver
     string recv_ip = GetIpAddress(this->node_list[1]);
     this->send_sock->Connect(recv_ip);
 
@@ -105,6 +114,7 @@ int MsgClient::SendMsg()
     cout << recv_ip << endl;
 #endif
 
+    // Send msg
     return SendData();
 }
 
@@ -113,12 +123,14 @@ int MsgClient::SendData()
     int rv = 0;
     string data = "";
 
+    // Make data to json format
     Json::Value root;
     root["sender"] = myInfo->GetGithubId();
     root["receiver"] = this->receiver;
     root["data"] = this->msg;
     data = root.toStyledString();
 
+    // Encrypt data and send it
     data = EncryptMsg(data);
     rv = this->send_sock->Send(data);
 
@@ -129,11 +141,12 @@ string MsgClient::EncryptMsg(string data)
 {
     for(int i = this->route_length; i>1 ; i--)
     {
+        // Set receiver, sender, pgp key id
         string receiver = this->node_list[i-1];
         string sender = this->node_list[i-2];
-        //data = PGP->Encrypt(GetPGPKeyId(receiver), data);
-
         string pub_key_id = ((UserInfo*)UserInfoMap[receiver])->GetPGPKeyId();
+
+        // encrypt data using receiver's pgp key
         data = pgpmanager->EncryptData(pub_key_id, data);
         if (i==2)
             break;

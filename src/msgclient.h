@@ -6,14 +6,15 @@
 #include <list>
 #include <stdlib.h>
 #include <cstdlib>
-#include <ctime>        // std::time
+#include <ctime>
 
 #include "json/json.h"
 #include "user_info.h"
 #include "socket.h"
 #include "user_info.h"
 #include "clientsocket.h"
-#include "PgpManager.h"
+#include "pgpmanager.h"
+
 using namespace std;
 
 extern UserInfo* myInfo;
