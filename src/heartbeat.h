@@ -29,15 +29,9 @@ class Heartbeat
         void SendKill();
 
     private:
-        //UDPSocket* send_sock;
-        //UDPSocket* recv_sock;
-
-        //int Initialize();
-        //int CreateSocket();
-        //int SetSocket();
         void SendBroadcast();
         void RecvBroadcast();
-        int hackDetector(string v1);
+        int HackDetector(string str);
 };
 
 #endif // HEARTBEAT_H
