@@ -19,7 +19,7 @@ using namespace std;
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
-extern PgpManager *pgpmanager;
+extern PgpManager* pgpmanager;
 
 class MsgClient
 {
