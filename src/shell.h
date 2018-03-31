@@ -1,16 +1,18 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include<iostream>
-#include<list>
-#include<cstring>
+#include <iostream>
+#include <list>
+#include <cstring>
 #include <cstdio>
 #include <termios.h>
+#include <cstdlib>
+#include <fstream>
 
 #include "user_info.h"
 #include "msgserver.h"
 #include "msgclient.h"
-#include "PgpManager.h"
+#include "pgpmanager.h"
 #include "heartbeat.h"
 
 using namespace std;
@@ -30,7 +32,9 @@ class Shell
     private:
         string private_id;
         string private_pw;
+
         list <string> prompt;
+
         string receiver;
         MsgClient *msg_client;
 
@@ -49,6 +53,7 @@ class Shell
         int cat(const string v1);
         int ls();
         int send(const string v1);
+        void printMyInfo();
         void printMember();
 
         string GetPass();
