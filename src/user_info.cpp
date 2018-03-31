@@ -1,13 +1,10 @@
 #include "user_info.h"
 
-UserInfo::UserInfo()
-{
-}
-UserInfo::~UserInfo()
-{
-}
+UserInfo::UserInfo(){}
 
+UserInfo::~UserInfo(){}
 
+// Getter and Setter for UserInfo fields
 string UserInfo::GetGithubId()
 {
     return this->github_id;
