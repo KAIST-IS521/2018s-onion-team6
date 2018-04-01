@@ -8,6 +8,7 @@
 #include <termios.h>
 #include <cstdlib>
 #include <fstream>
+#include <fcntl.h>
 
 #include "user_info.h"
 #include "msgserver.h"
@@ -46,13 +47,13 @@ class Shell
         int PrintPrompt();
         int ParseCmd();
 
-        void push_list(const string v1);
+        void push_list(string cmd);
         void pop_list();
 
         void usage();
-        int cat(const string v1);
+        int cat(string file_name);
         int ls();
-        int send(const string v1);
+        int send(string github_id);
         void printMyInfo();
         void printMember();
 

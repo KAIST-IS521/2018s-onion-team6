@@ -169,37 +169,32 @@ int Shell::ParseCmd()
     return 0;
 }
 
-int Shell::cat(const string gitId)
+int Shell::cat(string file_name)
 {
-    string fileName = gitId;
-    size_t tokenlen = 0;
+    size_t tokenlen=0;
 
     // directory traversal mitigation
-    while( fileName.find("/") != string::npos )
+    while( file_name.find("/") != string::npos )
     {
-         tokenlen = fileName.find("/");
-         fileName = fileName.substr(tokenlen+1);
+        tokenlen = file_name.find("/");
+        file_name = file_name.substr(tokenlen+1);
     }
+    string file_path = "./MSG/" + file_name;
 
-    string filePath = "./MSG/" + fileName;
-    ifstream openFile(filePath.data());
-
-    // file open and read
-    if(openFile.is_open())
+    // open file and read data
+    ifstream open_file(file_path.data());
+    if(open_file.is_open())
     {
         string line;
-        while(getline(openFile, line))
-        {
-            cout << line <<endl;
-        }
-        openFile.close();
+        while(getline(open_file, line))
+            cout << line << endl;
+        open_file.close();
         cout << endl;
     }
     else
     {
-        cout << "[Error!] No file for " << filePath << endl;
+        cout << "[Error!] No file for " << file_path << endl;
     }
-
     return 0;
 }
 
@@ -209,16 +204,16 @@ int Shell::ls()
     return 0;
 }
 
-int Shell::send(const string gitId)
+int Shell::send(const string github_id)
 {
-    prompt.push_back("send @ <"+gitId+"> : ");
+    prompt.push_back("send @ <"+github_id+"> : ");
     return 0;
 }
 
-void Shell::push_list(const string v1)
+void Shell::push_list(const string cmd)
 {
-    if(!v1.empty())
-        prompt.push_back(v1);
+    if(!cmd.empty())
+        prompt.push_back(cmd);
 }
 
 void Shell::pop_list()
