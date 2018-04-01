@@ -163,8 +163,6 @@ $ ./2_container_docker.sh ${CONTAINER_NAME}
 User4
  # cat User4
  [+] msg > Hi!
- [+] msg > I'm User1
-
 ```
 
 
