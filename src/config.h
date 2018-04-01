@@ -15,9 +15,9 @@
 
 #define PRIVATEKEY_PATH "./private.key"
 
-#define BUFF_SIZE 4096
-#define MAX_BUF_LEN 1024
-#define MAX_SEND_LEN 1024
+#define BUFF_SIZE 8000
+#define MAX_BUF_LEN 4096
+#define MAX_SEND_LEN 4096
 
 
 #define SERVER_SOCK 8888

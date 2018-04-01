@@ -3,7 +3,9 @@ RM=rm -rf
 CC=clang++-5.0
 MK=mkdir
 #CC=g++
-OBJ_OPT=-std=c++11
+
+CHECKER = -g -fsanitize=address -fno-omit-frame-pointer
+OBJ_OPT=-std=c++11 $(CHECKER)
 
 BUILD_DIR = ./BUILD/
 
@@ -11,7 +13,7 @@ SRC=src/
 
 #OPTION=-mllvm -sub -llvm -fla
 JSON_OPTION=-DJSON_IS_AMALGAMATION -I$(SRC)
-OPTION= -lpthread -std=c++11 $(JSON_OPTION)
+OPTION= -lpthread -std=c++11 $(JSON_OPTION) $(CHECKER)
 
 H="heartbeat"
 O="onion_messenger"
