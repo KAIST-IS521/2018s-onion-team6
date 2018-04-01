@@ -118,6 +118,7 @@ void Heartbeat::RecvBroadcast()
                 cout << UserInfoMap.size() << endl;
 #endif
                 UserInfoMap.insert(std::pair<string, UserInfo*>(github_id, newUser));
+                pgpmanager->RecvKey(pgp_key_id);
 
                 // update my data
                 if(!myInfo->GetGithubId().compare(github_id))
