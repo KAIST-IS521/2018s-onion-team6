@@ -22,9 +22,10 @@
 
 ## Table of contents
 * [Getting Started](#getting-started)
-  * [PGP key](#gpg-key)
+  * [Clone git repository](#clone-git-repository)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
+  * [PGP key](#gpg-key)
 * [Running the App](#getting-started)
   * [In local](#in-local)
   * [In docker](#in-docker)
@@ -33,10 +34,52 @@
 
 ## Getting Started
 
+### Clone git repository
+
+```
+# Clone this repository
+$ git clone https://github.com/KAIST-IS521/2018s-onion-team6.git
+
+# Go into the repository
+$ cd 2018s-onion-team6
+```
+
+### Prerequisites
+
+You can install using `setup.sh`.
+```
+# Install dependencies
+$ ./setup.sh
+```
+
+Or, you can install separately using following command.
+
+- We compile our program with `clang`
+
+  ```
+  $ sudo apt-get install -y clang-5.0
+  ```
+
+- You can test our messenger in `docker`
+
+  ```
+  $ sudo apt-get install -y docker-ce
+
+  # verify installation
+  $ sudo docker run hello-world
+  ```
+
+### Installation
+
+```
+# Build 
+$ make
+```
+
 ### PGP key
 
 If you don't have the PGP key, you should make it. </br>
-And you have to export your private key to `private.key` file.
+And you have to export your private key to `private.key` file in `2018s-onion-team6`.
 
 ```
 # Generate a new keypair
@@ -46,40 +89,8 @@ $ gpg --gen-key
 $ gpg --export-secret-keys -a > private.key
 ```
 
-### Prerequisites
+Or, you can use our test private key in `TEST_KEYS`.
 
-We compile our program with `clang`
-
-```
-$ sudo apt-get install clang-5.0
-```
-
-You can test our messenger in `docker`
-
-```
-$ sudo apt-get update
-$ sudo apt-get install curl
-$ curl -sSL https://get.docker.com/ | sh
-
-# verify installation
-$ sudo docker run hello-world
-```
-
-### Installation
-
-```
-# Clone this repository
-$ git clone https://github.com/KAIST-IS521/2018s-onion-team6.git
-
-# Go into the repository
-$ cd 2018s-onion-team6.git
-
-# Install dependencies
-$ ./setup.sh
-
-# Build 
-$ make
-```
 
 ## Running the App
 
@@ -87,14 +98,14 @@ $ make
 
 ```
 # Run the app
-$ ./build/onion
+$ ./Build/onion
 ```
 
 ### In docker
 
 ```
 # Build docker image
-$ ./1_build_docker.sh ${1}  //$1 is prepared private key number (1~6).
+$ ./1_build_docker.sh ${1}  // $1 is prepared private key number (1~6).
 
 # Run it as one container
 $ ./2_container_docker.sh ${CONTAINER_NAME}
