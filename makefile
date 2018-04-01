@@ -23,9 +23,6 @@ S="socket"
 U="user_info"
 P="pgpmanager"
 J="jsoncpp"
-SS="serversocket"
-SA="socketaddress"
-TA="clientsocket"
 MS="msgserver"
 MC="msgclient"
 default :
@@ -37,9 +34,6 @@ default :
 	$(CC) $(OBJ_OPT) -c $(SRC)$(S).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(U).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(H).cpp $(JSON_OPTION)
-	$(CC) $(OBJ_OPT) -c $(SRC)$(SS).cpp $(JSON_OPTION)
-	$(CC) $(OBJ_OPT) -c $(SRC)$(SA).cpp $(JSON_OPTION)
-	$(CC) $(OBJ_OPT) -c $(SRC)$(TA).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(MS).cpp $(JSON_OPTION)
 	$(CC) $(OBJ_OPT) -c $(SRC)$(MC).cpp $(JSON_OPTION)
 
