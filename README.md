@@ -19,6 +19,15 @@
 ```
 
 ## Abstract
+- Project for **Onion messenger**
+  + Onion messenger is inspired by [onion
+routing](https://en.wikipedia.org/wiki/Onion_routing) like [Tor](https://en.wikipedia.org/wiki/Tor_(anonymity_network)).
+  + It anonymizes messages between clients using PGP.
+  + Message transmission route changes randomly.
+  + The sender and the receiver of a message can see
+the message, but other clients cannot see its content or figure out who is
+sending the message to whom like following picture.
+  ![onion](./ASSETS/IMGS/onion_messenger.jpg)
 
 ## Table of contents
 * [Getting Started](#getting-started)
@@ -30,6 +39,10 @@
   * [In local](#in-local)
   * [In docker](#in-docker)
 * [Usage](#usage)
+* [Running Examples](#running-examples)
+* [Details](#details)
+  * [Protocols](#protocols)
+  * [Source Code](#source-code)
 * [Authors](#authors)
 
 ## Getting Started
@@ -165,6 +178,41 @@ User4
  [+] msg > Hi!
 ```
 
+## Details
+
+### Protocols
+
+- Send packets using json format
+
+1. Update Peer List
+
+  ```
+    |        flag        |     github_id    |        pgp_key_id        |
+    |--------------------|------------------|--------------------------|
+    | 0(dead) or 1(live) | user's github id | user's pgp public key id |
+  ```
+
+2. Send/Recv Message
+
+  ```
+    |     sender     |     receiver     |             data             |
+    |----------------|------------------|------------------------------|
+    | message sender | message receiver | plain data or encrypted data |
+  ```
+
+### Source Code
+
+```
+main.cpp            : Include main function
+onion_messenger.cpp : OnionMessenger main class
+shell.cpp           : User interface
+user_info.cpp       : User4 information class
+socket.cpp          : Include socket wrapper functions
+heartbeat.cpp       : Send and receive broadast message for updating peer list
+msgclient.cpp       : Encrypt message and send it
+msgserver.cpp       : Receive message, decrypt data, decide to read or forward
+pgpmanager.cpp      : Include gpg wrapper functions
+```
 
 ## Authors
  * Team JFF [Just For Fun]
