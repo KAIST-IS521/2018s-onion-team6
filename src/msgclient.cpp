@@ -12,13 +12,13 @@ void MsgClient::Start()
     // Check if receiver exists
     if (CheckReceiver())
     {
-#ifdef MSGCLIENT_LOG
-        cout << "Find a client" << endl;
-#endif
         // Set route and send msg
         if(SetRoute())
         {
-            SendMsg();
+            if(SendMsg() < 0)
+            {
+                cout << "[Error!] Fail to send message" << endl;
+            }
         }
         else
         {
@@ -26,11 +26,7 @@ void MsgClient::Start()
         }
     }
     else
-    {
-//#ifdef MSGCLIENT_LOG
-        cout << "No such a client" << endl;
-//#endif
-    }
+        cout << "[Error!] No such a client" << endl;
 }
 
 bool MsgClient::CheckReceiver()
@@ -106,13 +102,12 @@ bool MsgClient::SetRoute()
 
 int MsgClient::SendMsg()
 {
+    int rv;
     // Set receiver
     string recv_ip = GetIpAddress(this->node_list[1]);
-    this->send_sock->Connect(recv_ip);
-
-#ifdef MSGCLIENT_LOG
-    cout << recv_ip << endl;
-#endif
+    rv = this->send_sock->Connect(recv_ip, MSG_SERVER_PORT);
+    if (rv < 0)
+        return rv;
 
     // Send msg
     return SendData();
@@ -132,7 +127,13 @@ int MsgClient::SendData()
 
     // Encrypt data and send it
     data = EncryptMsg(data);
-    rv = this->send_sock->Send(data);
+    if(!data.compare(""))
+    {
+        cout << "[Error!] Encrypt data" << endl;
+        return -1;
+    }
+    else
+        rv = this->send_sock->Send(data);
 
     return rv;
 }
@@ -148,6 +149,8 @@ string MsgClient::EncryptMsg(string data)
 
         // encrypt data using receiver's pgp key
         data = pgpmanager->EncryptData(pub_key_id, data);
+        if (!data.compare(""))
+            return data;
         if (i==2)
             break;
         Json::Value root;
