@@ -28,10 +28,19 @@ string PgpManager::ImportMyPrivateKey()
     {
         // get pgp key id
         string keys="gpg: key ";
-        string key_id = ret.substr((ret.find(keys))+keys.length(),8);
-        myInfo->SetPGPKeyId(key_id);
+        string pub_key_id = ret.substr((ret.find(keys))+keys.length(),8);
+        myInfo->SetPGPKeyId(pub_key_id);
+        SendKey(pub_key_id);
     }
     return ret;
+}
+
+string PgpManager::SendKey(string pub_key_id)
+{
+    // execute recv key command
+    string cmd_data = "/usr/bin/gpg --keyserver keyserver.ubuntu.com";
+    cmd_data += " --send-keys " + pub_key_id;
+    return CallLocalGPG(cmd_data);
 }
 
 string PgpManager::RecvKey(string pub_key_id)
