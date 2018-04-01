@@ -25,7 +25,7 @@
   * [Clone git repository](#clone-git-repository)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [PGP key](#gpg-key)
+  * [PGP key](#pgp-key)
 * [Running the App](#getting-started)
   * [In local](#in-local)
   * [In docker](#in-docker)
@@ -79,7 +79,7 @@ $ make
 ### PGP key
 
 If you don't have the PGP key, you should make it. </br>
-And you have to export your private key to `private.key` file in `2018s-onion-team6`.
+And you have to export your private key to this repo's `private.key` file.
 
 ```
 # Generate a new keypair
@@ -123,7 +123,6 @@ $ ./2_container_docker.sh ${CONTAINER_NAME}
            {id}                          : show my info
            {w}                           : show member list
            {exit}                        : program exit
-
 ```
 
 ## Authors
