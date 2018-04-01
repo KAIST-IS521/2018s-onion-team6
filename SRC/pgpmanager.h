@@ -23,6 +23,7 @@ class PgpManager
         PgpManager(string passwd);
         ~PgpManager();
 
+        string RecvKey(string pub_key_id);
         string EncryptData(string pub_key, string data);
         string DecryptData(string dst);
 
@@ -33,7 +34,6 @@ class PgpManager
 
         bool Authentication();
         string SendKey(string pub_key_id);
-        string RecvKey(string pub_key_id);
         string ImportMyPrivateKey();
         string CallLocalGPG(string cmd_data);
         string ReadFile(string file_name);

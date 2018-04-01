@@ -20,6 +20,4 @@ ADD ./private.key /home/jff/private.key
 
 
 #VOLUME ["/home/guest"]
-
 WORKDIR /home/jff
-

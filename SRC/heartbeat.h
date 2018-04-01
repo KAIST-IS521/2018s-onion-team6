@@ -13,11 +13,13 @@
 #include "config.h"
 #include "socket.h"
 #include "user_info.h"
+#include "pgpmanager.h"
 
 using namespace std;
 
 extern UserInfo* myInfo;
 extern unordered_map<string, UserInfo*> UserInfoMap;
+extern PgpManager* pgpmanager;
 
 class Heartbeat
 {

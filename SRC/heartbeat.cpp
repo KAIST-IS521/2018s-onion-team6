@@ -14,17 +14,20 @@ void Heartbeat::Start()
 
 void Heartbeat::SendBroadcast()
 {
+    int rv = 0;
     int broadcast = 1;
     const char *broadcast_addr = "255.255.255.255";
 
     // Create socket and set up for broadcasting
     UDPSocket* send_sock;
     send_sock = new UDPSocket();
-    send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    send_sock->Bind(HEARTBEAT_SEND_PORT);
+    if (!send_sock->Valid()) exit(-1);
+    rv = send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    if (rv == -1) exit(-1);
+    rv = send_sock->Bind(HEARTBEAT_SEND_PORT);
+    if (rv < 0) exit(-1);
     send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
 
-    int rv = 0;
     std::chrono::seconds period(BROADCAST_PERIOD);
 
     while(1)
@@ -36,8 +39,8 @@ void Heartbeat::SendBroadcast()
         root["pgp_key_id"] = myInfo->GetPGPKeyId();
 
         rv = send_sock->Send(root.toStyledString());
-        if (rv > 0)
 #ifdef HEARTBEAT_LOG
+        if (rv > 0)
           cout << "Send Broadcast" << endl;
 #endif
         // delay 1s
@@ -47,13 +50,16 @@ void Heartbeat::SendBroadcast()
 
 void Heartbeat::RecvBroadcast()
 {
+    int rv;
     int broadcast = 1;
-
     // Create socket for receiving broadcast message
     UDPSocket *recv_sock = new UDPSocket();
+    if (!recv_sock->Valid()) exit(-1);
     recv_sock = new UDPSocket();
     recv_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    if (rv == -1) exit(-1);
     recv_sock->Bind(HEARTBEAT_RECV_PORT);
+    if (rv < 0) exit(-1);
 
     string *data;
 
@@ -112,6 +118,7 @@ void Heartbeat::RecvBroadcast()
                 cout << UserInfoMap.size() << endl;
 #endif
                 UserInfoMap.insert(std::pair<string, UserInfo*>(github_id, newUser));
+                pgpmanager->RecvKey(pgp_key_id);
 
                 // update my data
                 if(!myInfo->GetGithubId().compare(github_id))
@@ -155,13 +162,17 @@ void Heartbeat::RecvBroadcast()
 void Heartbeat::SendKill()
 {
     // When messenger die, Send kill message for updating peer list
+    int rv;
     int broadcast = 1;
     const char *broadcast_addr = "255.255.255.255";
 
     // Create socket and setting for broadcasting
     UDPSocket* send_sock = new UDPSocket();
-    send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
-    send_sock->Bind(HEARTBEAT_KILL_PORT);
+    if (!send_sock->Valid()) exit(-1);
+    rv = send_sock->SetSockOpt(SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+    if (rv == -1) exit(-1);
+    rv = send_sock->Bind(HEARTBEAT_KILL_PORT);
+    if (rv < 0) exit(-1);
     send_sock->SetDestAddr(broadcast_addr, HEARTBEAT_RECV_PORT);
 
     // make data to json format
@@ -186,8 +197,6 @@ int Heartbeat::HackDetector(string str)
         return 1;
     }
     else
-    {
         return 0;
-    }
 }
 
