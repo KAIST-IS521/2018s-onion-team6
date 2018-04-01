@@ -5,6 +5,7 @@ MK=mkdir
 #CC=g++
 
 CHECKER = -g -fsanitize=address -fno-omit-frame-pointer
+CHECKER =
 OBJ_OPT=-std=c++11 $(CHECKER)
 
 BUILD_DIR = ./BUILD/
