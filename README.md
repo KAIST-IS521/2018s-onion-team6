@@ -1,5 +1,23 @@
 # 2018s-onion-team6
 
+## Greeting
+```
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                     _ _____ _____    ___        _             
+                    | |  ___|  ___|  / _ \ _ __ (_) ___  _ __  
+                 _  | | |_  | |_    | | | | '_ \| |/ _ \| '_ \ 
+                | |_| |  _| |  _|   | |_| | | | | | (_) | | | |
+                 \___/|_|   |_|      \___/|_| |_|_|\___/|_| |_|
+                                                               
+                __  __                                           
+               |  \/  | ___  ___ ___  __ _ _ __   __ _  ___ _ __ 
+               | |\/| |/ _ \/ __/ __|/ _` | '_ \ / _` |/ _ \ '__|
+               | |  | |  __/\__ \__ \ (_| | | | | (_| |  __/ |   
+               |_|  |_|\___||___/___/\__,_|_| |_|\__, |\___|_|   
+                                                 |___/           
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+```
+
 ## Abstract
 
 ## Table of contents
@@ -76,23 +94,25 @@ $ ./build/onion
 
 ```
 # Build docker image
-$ ./
+$ ./1_build_docker.sh ${1}  //$1 is prepared private key number (1~6).
 
 # Run it as one container
-$ ./
+$ ./2_container_docker.sh ${CONTAINER_NAME}
 ```
 
 ## Usage
 
 ```
-USAGE :# [COMMAND]
-         {help}                        : print usage
-         {send} {GIT_ID}               : send message
-                          -> {MESSAGE} : input message
-         {ls}                          : show received message list 
-         {cat} {GIT_ID}                : print recvived message
-         {w}                           : show member list
-         {exit}                        : program exit
+ USAGE : # [COMMAND]
+           {help}                        : print usage
+           {send} {GIT_ID}               : send message
+                            -> {MESSAGE} : input message
+           {ls}                          : show received message list
+           {cat} {GIT_ID}                : print recvived message
+           {id}                          : show my info
+           {w}                           : show member list
+           {exit}                        : program exit
+
 ```
 
 ## Authors
