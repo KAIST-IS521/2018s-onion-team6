@@ -105,7 +105,7 @@ $ ./Build/onion
 
 ```
 # Build docker image
-$ ./1_build_docker.sh ${1}  // $1 is prepared private key number (1~6).
+$ ./1_build_docker.sh ${1}  // $1 is prepared private key number (1~5).
 
 # Run it as one container
 $ ./2_container_docker.sh ${CONTAINER_NAME}
@@ -124,6 +124,49 @@ $ ./2_container_docker.sh ${CONTAINER_NAME}
            {w}                           : show member list
            {exit}                        : program exit
 ```
+
+## Running Examples
+
+```
+[+] GIT_ID > User1
+[+] Private key password > *******
+ USAGE : # [COMMAND]
+           {help}                        : print usage
+           {send} {GIT_ID}               : send message
+                            -> {MESSAGE} : input message
+           {ls}                          : show received message list 
+           {cat} {GIT_ID}                : print recvived message
+           {id}                          : show my info
+           {w}                           : show member list
+           {exit}                        : program exit
+
+ # id
+ [*] User1 (172.17.0.2::FEB3816B)
+ # w
+ ::::::::::   ONLINE MEMBER LIST   :::::::::::
+ [*] Git Id (IP :: PGP Key Id)
+ [+] User4 (172.17.0.5::14200C42)
+ [+] User3 (172.17.0.4::CFBA0DB9)
+ [+] User2 (172.17.0.3::89563D67)
+ [+] User1 (172.17.0.2::FEB3816B)
+ # send User4
+ # send @ <User4> : Hello
+ # send @ <User4> : I'm User4.
+ # send @ <User4> : 
+
+ # 
+[!] [ User4 ]'s Message arrived 
+ [+] msg > Hi!
+
+ # ls
+
+User4
+ # cat User4
+ [+] msg > Hi!
+ [+] msg > I'm User1
+
+```
+
 
 ## Authors
  * Team JFF [Just For Fun]
