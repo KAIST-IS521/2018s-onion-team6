@@ -28,15 +28,15 @@ class MsgServer
         void Start();
 
     private:
-        ClientSocket* p_client_sock;
-        ServerSocket* p_server_sock;
+        TCPSocket* server_sock;
+        TCPSocket* client_sock;
 
-        int JsonParsor(string msg);
         void RecvServer();
-        int MsgClient(string ip, string msg);
-        void Worker(ClientSocket* client_sock);
+        void Worker(TCPSocket* client_sock);
+        int JsonParsor(string msg);
         string PGPDecrypt(string msg);
         string SaveFile(string id, string msg);
+        int Forward(string ip, string msg);
 };
 
 #endif // MSGSERVER_H

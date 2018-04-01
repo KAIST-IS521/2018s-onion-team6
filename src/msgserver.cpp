@@ -11,65 +11,48 @@ void MsgServer::Start()
 
 void MsgServer::RecvServer()
 {
-    // Create socket and listen
-    p_server_sock = new ServerSocket(SERVER_SOCK);
-    int err = p_server_sock->listen();
-    if (err != 0)
-    {
-        std::cout << strerror(err) << std::endl;
-        exit(err);
-    }
+    // Create Server socket and listen
+    int rv;
+    int yes = 1;
+    this->server_sock = new TCPSocket();
+    if(!this->server_sock->Valid()) exit(-1);
+    rv = this->server_sock->SetSockOpt(SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+    if (rv == -1) exit(-1);
+    rv = this->server_sock->Bind(SERVER_SOCK);
+    if (rv < 0) exit(-1);
+    rv = this->server_sock->Listen(10);
+    if (rv < 0) exit(-1);
 
     while (true)
     {
-        p_client_sock = p_server_sock->accept();
-        if (!p_client_sock->valid())
+        // when get msg, create thread for receiving and forwarding msg
+        this->client_sock = this->server_sock->Accept();
+        if(!this->client_sock->Valid())
         {
-            delete p_client_sock;
+            delete this->client_sock;
             continue;
         }
-        std::thread acceptRun([this] { Worker(p_client_sock);});
+        std::thread acceptRun([this] { Worker(this->client_sock); });
         acceptRun.detach();
     }
-
-    delete p_server_sock;
+    delete this->client_sock;
 }
 
-
-int MsgServer::MsgClient(string ip, string msg)
+void MsgServer::Worker(TCPSocket* client_sock)
 {
-    struct sockaddr_in address;
-    int sock = 0, valread;
-    struct sockaddr_in serv_addr;
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    while (true)
     {
-        cout << "Socket creation error" <<endl;
-        return -1;
-    }
+        // recv msg
+        std::string msg;
+        if (client_sock->Recv(msg) <= 0)
+            break;
 
-    memset(&serv_addr, '0', sizeof(serv_addr));
-
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(SERVER_SOCK);
-
-    if(inet_pton(AF_INET, ip.c_str(), &serv_addr.sin_addr)<=0)
-    {
-        cout << "ERROR" << endl;
-        close(sock);
-        return -1;
+        // decrypt and parse msg
+        string decrypted_msg = pgpmanager->DecryptData(msg);
+        if(decrypted_msg != "")
+            this->JsonParsor(decrypted_msg);
     }
-
-    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-        cout << "Connect Failed" << endl;
-        return -1;
-    }
-    else
-    {
-        send(sock , msg.c_str() , msg.length() , 0 );
-        close(sock);
-    }
-return 1;
+    delete client_sock;
 }
 
 string MsgServer::SaveFile(string file_name, string data)
@@ -84,7 +67,7 @@ string MsgServer::SaveFile(string file_name, string data)
     }
     string file_path = "./MSG/" + file_name;
 
-    // add data
+    // save msg
     ofstream write_file(file_path.data(), ios::app);
     if(write_file.is_open())
     {
@@ -101,71 +84,70 @@ string MsgServer::SaveFile(string file_name, string data)
 
 int MsgServer::JsonParsor(string msg)
 {
-        JSONCPP_STRING errs;
-        Json::Value root;
-        Json::CharReaderBuilder builder;
-        Json::CharReader * reader = builder.newCharReader();
-        string github_id;
-        string receiver_id;
-        string pgp_data;
+    JSONCPP_STRING errs;
+    Json::Value root;
+    Json::CharReaderBuilder builder;
+    Json::CharReader * reader = builder.newCharReader();
 
-        reader->parse(msg.c_str(), msg.c_str()+msg.length(), &root, &errs);
-        if(errs.find("error") != string::npos)
-        {
-            cout << "[Error!] Not JSON Format" << endl;
-            return 0;
-        }
-        Json::Value j_sender    = root["sender"];
-        Json::Value j_receiver  = root["receiver"];
-        Json::Value j_data      = root["data"];
-        if(j_sender.isNull() || j_receiver.isNull() || j_data.isNull())
-        {
-            cout << "[Error!] Invalid Json Fromat" << endl;
-            return 0;
-        }
-        github_id    = j_sender.asCString();
-        receiver_id  = j_receiver.asCString();
-        pgp_data     = j_data.asCString();
+    string github_id;
+    string receiver_id;
+    string data;
 
-        if(receiver_id == myInfo->GetGithubId())
-        {
-            cout << "[!] [ "<< github_id << " ]'s Message arrived " << endl;
-            pgp_data = " [+] msg > " + pgp_data;
-            cout << pgp_data << endl;
-            this->SaveFile(github_id,pgp_data);
-        }
-        // NOT MY MESSAGE
-        else
-        {
-            string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
-            this->MsgClient(nextIp,pgp_data);
-        }
-    return 1;
-
-}
-string MsgServer::PGPDecrypt(string msg)
-{
-    return pgpmanager->DecryptData(msg);
-}
-
-void MsgServer::Worker(ClientSocket* client_sock)
-{
-    SocketAddress* addr = client_sock->get_sockaddr();
-    while (true)
+    // parse decrypted msg
+    reader->parse(msg.c_str(), msg.c_str()+msg.length(), &root, &errs);
+    if(errs.find("error") != string::npos)
     {
-        std::string msg;
-        if (client_sock->read(msg) <= 0)
-        {
-            break;
-        }
-        string decryptedMsg = this->PGPDecrypt(msg);
-        if(decryptedMsg!="")
-        {
-            this->JsonParsor(decryptedMsg);
-        }
+        cout << "[Error!] Not JSON Format" << endl;
+        return 0;
     }
-    delete client_sock;
+
+    // get data from parsed msg
+    Json::Value j_sender    = root["sender"];
+    Json::Value j_receiver  = root["receiver"];
+    Json::Value j_data      = root["data"];
+    if(j_sender.isNull() || j_receiver.isNull() || j_data.isNull())
+    {
+        cout << "[Error!] Invalid Json Fromat" << endl;
+        return 0;
+    }
+    github_id = j_sender.asCString();
+    receiver_id = j_receiver.asCString();
+    data = j_data.asCString();
+
+    // my msg, receive it
+    if(receiver_id == myInfo->GetGithubId())
+    {
+        // print and save msg
+        cout << "\n[!] [ "<< github_id << " ]'s Message arrived " << endl;
+        data = " [+] msg > " + data;
+        cout << data << endl;
+        this->SaveFile(github_id, data);
+    }
+
+    // not my msg, forward it
+    else
+    {
+        // forward to next peer
+        string nextIp = UserInfoMap[receiver_id]->GetIpAddr();
+        if(this->Forward(nextIp, data) < 0)
+            cout << "[Error!] Fail to forward msg" << endl;
+    }
+    return 1;
 }
+
+int MsgServer::Forward(string ip, string msg)
+{
+    // forwarding msg to next ip
+    int rv;
+    TCPSocket* sock = new TCPSocket();
+    if(!sock->Valid()) return -1;
+    rv = sock->Connect(ip, SERVER_SOCK);
+    if (rv < 0) return -1;
+    rv = sock->Send(msg);
+    delete sock;
+    return rv;
+}
+
 MsgServer::~MsgServer()
 {
 }
