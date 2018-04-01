@@ -115,10 +115,10 @@ string PgpManager::ReadFile(string file_name)
     }
     else
     {
-        cout << "[Error!] File open error " << file_path << endl;
-        exit(0);
+        cout << "[E] File open error " << file_path << endl;
+        cout << "[E] Something problem in encrypt data." << endl;
+        return "";
     }
-    return "";
 }
 
 string PgpManager::EncryptData(string pub_key_id, string data)
