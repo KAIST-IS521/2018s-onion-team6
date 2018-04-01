@@ -206,7 +206,7 @@ User4
 main.cpp            : Include main function
 onion_messenger.cpp : OnionMessenger main class
 shell.cpp           : User interface
-user_info.cpp       : User4 information class
+user_info.cpp       : User information class
 socket.cpp          : Include socket wrapper functions
 heartbeat.cpp       : Send and receive broadast message for updating peer list
 msgclient.cpp       : Encrypt message and send it
