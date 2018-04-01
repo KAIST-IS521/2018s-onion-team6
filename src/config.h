@@ -11,14 +11,6 @@
 #define HEARTBEAT_KILL_PORT 7779
 #define MSG_SERVER_PORT 8888
 
-#define MAX_UDP_BUF_SIZE 1024
-
-#define PRIVATEKEY_PATH "./private.key"
-
 #define BUFF_SIZE 8000
-#define MAX_BUF_LEN 4096
-#define MAX_SEND_LEN 4096
 
-
-#define SERVER_SOCK 8888
 #endif // CONFIG_H

@@ -115,8 +115,8 @@ string PgpManager::ReadFile(string file_name)
     }
     else
     {
-        cout << "[E] File open error " << file_path << endl;
-        cout << "[E] Something problem in encrypt data." << endl;
+        cout << "[Error!] File open error " << file_path << endl;
+        cout << "[Error!] Something problem in encrypt data." << endl;
         return "";
     }
 }

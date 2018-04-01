@@ -9,8 +9,6 @@
 
 #include "json/json.h"
 #include "config.h"
-#include "serversocket.h"
-#include "clientsocket.h"
 #include "user_info.h"
 #include "pgpmanager.h"
 #include "socket.h"

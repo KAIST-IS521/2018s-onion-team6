@@ -18,7 +18,7 @@ void MsgServer::RecvServer()
     if(!this->server_sock->Valid()) exit(-1);
     rv = this->server_sock->SetSockOpt(SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
     if (rv == -1) exit(-1);
-    rv = this->server_sock->Bind(SERVER_SOCK);
+    rv = this->server_sock->Bind(MSG_SERVER_PORT);
     if (rv < 0) exit(-1);
     rv = this->server_sock->Listen(10);
     if (rv < 0) exit(-1);
@@ -141,7 +141,7 @@ int MsgServer::Forward(string ip, string msg)
     int rv;
     TCPSocket* sock = new TCPSocket();
     if(!sock->Valid()) return -1;
-    rv = sock->Connect(ip, SERVER_SOCK);
+    rv = sock->Connect(ip, MSG_SERVER_PORT);
     if (rv < 0) return -1;
     rv = sock->Send(msg);
     delete sock;

@@ -84,9 +84,6 @@ int UDPSocket::Send(string data)
     const char *c_data = data.c_str();
     int len = data.length();
 
-    if (len > MAX_UDP_BUF_SIZE)
-        len = MAX_UDP_BUF_SIZE;
-
     int rv = sendto(this->sd, c_data, len, 0, (struct sockaddr*)&(this->recvaddr), sizeof recvaddr);
     if (rv < 0)
         cout << "[Error!] Fail to send data" << endl;
@@ -99,10 +96,10 @@ int UDPSocket::Send(string data)
 string* UDPSocket::Recv()
 {
     string *data = new string[2];
-    char buf[MAX_UDP_BUF_SIZE];
+    char buf[BUFF_SIZE];
     struct sockaddr_in src_addr;
     int addrlen = sizeof(src_addr);
-    int rv = recvfrom(this->sd, buf, MAX_UDP_BUF_SIZE-1, 0, (struct sockaddr*)&src_addr, (socklen_t*)&addrlen);
+    int rv = recvfrom(this->sd, buf, BUFF_SIZE-1, 0, (struct sockaddr*)&src_addr, (socklen_t*)&addrlen);
     if (rv < 0)
     {
         cout << "[Error!] Fail to recv data" << endl;
@@ -137,7 +134,7 @@ TCPSocket* TCPSocket::Accept()
     int addrlen = sizeof(address);
     int client_sd = accept(this->sd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
     if (client_sd < 0)
-        cout << "[Error!] Faile to accept" << endl;
+        cout << "[Error!] Fail to accept" << endl;
     return new TCPSocket(client_sd);
 }
 

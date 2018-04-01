@@ -12,7 +12,6 @@
 #include "user_info.h"
 #include "socket.h"
 #include "user_info.h"
-#include "clientsocket.h"
 #include "pgpmanager.h"
 
 using namespace std;
