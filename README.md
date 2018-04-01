@@ -211,7 +211,7 @@ onion_messenger.cpp : OnionMessenger main class
 shell.cpp           : User interface
 user_info.cpp       : User information class
 socket.cpp          : Include socket wrapper functions
-heartbeat.cpp       : Send and receive broadast message for updating peer list
+heartbeat.cpp       : Send and receive broadcast message for updating peer list
 msgclient.cpp       : Encrypt message and send it
 msgserver.cpp       : Receive message, decrypt data, decide to read or forward
 pgpmanager.cpp      : Include gpg wrapper functions
