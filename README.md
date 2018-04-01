@@ -85,14 +85,16 @@ $ ./2_container_docker.sh ${CONTAINER_NAME}
 ## Usage
 
 ```
-USAGE :# [COMMAND]
-         {help}                        : print usage
-         {send} {GIT_ID}               : send message
-                          -> {MESSAGE} : input message
-         {ls}                          : show received message list 
-         {cat} {GIT_ID}                : print recvived message
-         {w}                           : show member list
-         {exit}                        : program exit
+ USAGE : # [COMMAND]
+           {help}                        : print usage
+           {send} {GIT_ID}               : send message
+                            -> {MESSAGE} : input message
+           {ls}                          : show received message list
+           {cat} {GIT_ID}                : print recvived message
+           {id}                          : show my info
+           {w}                           : show member list
+           {exit}                        : program exit
+
 ```
 
 ## Authors
