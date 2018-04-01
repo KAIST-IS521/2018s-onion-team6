@@ -35,7 +35,7 @@ sending the message to whom like following picture.
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
   * [PGP key](#pgp-key)
-* [Running the App](#getting-started)
+* [Running the App](#running-the-app)
   * [In local](#in-local)
   * [In docker](#in-docker)
 * [Usage](#usage)
