@@ -76,10 +76,10 @@ $ ./build/onion
 
 ```
 # Build docker image
-$ ./
+$ ./1_build_docker.sh ${1}  //$1 is prepared private key number (1~6).
 
 # Run it as one container
-$ ./
+$ ./2_container_docker.sh ${CONTAINER_NAME}
 ```
 
 ## Usage
