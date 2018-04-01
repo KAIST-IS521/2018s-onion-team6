@@ -87,6 +87,9 @@ Or, you can install separately using following command.
 ```
 # Build 
 $ make
+
+# Remove object files
+$ make clean
 ```
 
 ### PGP key
