@@ -58,6 +58,8 @@ string PgpManager::DecryptData(string data)
     string src = std::to_string(rand() % 100000000);
     string file_name = this->SaveFile(src, data);
 
+    // Passphrase is plain text without filtering
+    // So command injection is possible
     // execute decrypt command
     string cmd_data = "/usr/bin/gpg --batch --yes";
     cmd_data += " --passphrase \"" + this->passphrase;
