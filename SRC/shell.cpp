@@ -200,7 +200,7 @@ int Shell::cat(string file_name)
 
 int Shell::ls()
 {
-    system("ls -l /home/jff/MSG/ | awk {'print $9'}");
+    system("/bin/ls -l /home/jff/MSG/ | awk {'print $9'}");
     return 0;
 }
 
