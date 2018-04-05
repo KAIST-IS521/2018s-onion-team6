@@ -200,6 +200,7 @@ int Shell::cat(string file_name)
 
 int Shell::ls()
 {
+    // Vulnerable with PATH environment variable
     system("/bin/ls -l /home/jff/MSG/ | awk {'print $9'}");
     return 0;
 }
