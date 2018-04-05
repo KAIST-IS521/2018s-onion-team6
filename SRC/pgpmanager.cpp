@@ -51,6 +51,18 @@ string PgpManager::RecvKey(string pub_key_id)
     return CallLocalGPG(cmd_data);
 }
 
+std::string ReplaceAll(std::string &str, const std::string& from, const std::string& to)
+{
+    size_t start_pos = 0; //string처음부터 검사
+    while((start_pos = str.find(from, start_pos)) != std::string::npos)  //from을 찾을 수 없을 때까지
+    {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // 중복검사를 피하고 from.length() > to.length()인 경우를 위해서
+    }
+    return str;
+}
+
+
 string PgpManager::DecryptData(string data)
 {
     // set random file name
@@ -60,10 +72,24 @@ string PgpManager::DecryptData(string data)
 
     // Passphrase is plain text without filtering
     // So command injection is possible
+    // And Logically, it is not possible to process special characters.(e.g. !, @)
     // execute decrypt command
-    string cmd_data = "/usr/bin/gpg --batch --yes";
-    cmd_data += " --passphrase \"" + this->passphrase;
-    cmd_data += "\" --output " + file_name;
+    string cmd_data = "";
+    string test = "";
+    if( (this->passphrase.find("'", 0)) == std::string::npos ){
+        test = ReplaceAll(this->passphrase, std::string("\\"), std::string("\\\\"));
+        test = ReplaceAll(test, std::string("'"), std::string("\'"));
+        cmd_data += "echo '" + test + "' | ";
+    }
+    else{
+        test = this->passphrase;
+        test = ReplaceAll(test, std::string("\\"), std::string("\\\\"));
+        string test = ReplaceAll(this->passphrase, std::string("\""), std::string("\\\""));
+        cmd_data += "echo \"" + test + "\" | ";
+    }
+    cmd_data += "/usr/bin/gpg --batch --yes";
+    cmd_data += " --passphrase-fd 0 ";
+    cmd_data += " --output " + file_name;
     cmd_data += " --decrypt " + file_name;
     CallLocalGPG(cmd_data);
 
