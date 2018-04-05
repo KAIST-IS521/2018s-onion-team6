@@ -75,17 +75,16 @@ string PgpManager::DecryptData(string data)
     // And Logically, it is not possible to process special characters.(e.g. !, @)
     // execute decrypt command
     string cmd_data = "";
-    string test = "";
+    string pw = "";
     if( (this->passphrase.find("'", 0)) == std::string::npos ){
-        test = ReplaceAll(this->passphrase, std::string("\\"), std::string("\\\\"));
-        test = ReplaceAll(test, std::string("'"), std::string("\'"));
-        cmd_data += "echo '" + test + "' | ";
+        pw = ReplaceAll(this->passphrase, std::string("\\"), std::string("\\\\"));
+        pw = ReplaceAll(pw, std::string("'"), std::string("\'"));
+        cmd_data += "echo '" + pw + "' | ";
     }
     else{
-        test = this->passphrase;
-        test = ReplaceAll(test, std::string("\\"), std::string("\\\\"));
-        string test = ReplaceAll(this->passphrase, std::string("\""), std::string("\\\""));
-        cmd_data += "echo \"" + test + "\" | ";
+        pw = ReplaceAll(this->passphrase, std::string("\\"), std::string("\\\\"));
+        pw = ReplaceAll(pw, std::string("\""), std::string("\\\""));
+        cmd_data += "echo \"" + pw + "\" | ";
     }
     cmd_data += "/usr/bin/gpg --batch --yes";
     cmd_data += " --passphrase-fd 0 ";
