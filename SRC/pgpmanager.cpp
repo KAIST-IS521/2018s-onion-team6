@@ -54,9 +54,16 @@ string PgpManager::RecvKey(string pub_key_id)
 string PgpManager::DecryptData(string data)
 {
     // set random file name
-    srand(time(NULL));
-    string src = std::to_string(rand() % 100000000);
-    string file_name = this->SaveFile(src, data);
+    // srand(time(NULL));
+    // string src = std::to_string(rand() % 100000000);
+    // cout << src << endl;
+    /* Calling srand(time(NULL)) multiple times can cause collision.
+       If DecryptData is called More than twice in a second, collision will happen.
+       Therefore you should use srand once, or use mkstemp.
+    */
+    char temp[9] = "XXXXXXXX";
+    mkstemp(temp);
+    string file_name = this->SaveFile(string(temp), data);
 
     // execute decrypt command
     string cmd_data = "/usr/bin/gpg --batch --yes";
