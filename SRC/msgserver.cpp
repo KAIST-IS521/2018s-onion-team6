@@ -94,6 +94,7 @@ int MsgServer::JsonParsor(string msg)
     string data;
 
     // parse decrypted msg
+    // Lack of error handling
     reader->parse(msg.c_str(), msg.c_str()+msg.length(), &root, &errs);
     if(errs.find("error") != string::npos)
     {
