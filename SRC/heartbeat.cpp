@@ -101,6 +101,8 @@ void Heartbeat::RecvBroadcast()
         string pgp_key_id = j_pgp_key_id.asCString();
 
         // check if pgp key id is valid
+        // HackDetector is not tight verification
+        // So we can just send Json type string with any value
         if(HackDetector(pgp_key_id))
             continue;
 
